@@ -91,7 +91,7 @@ const createPopup = function (ad) {
 const createPin = function (ad) {
   const template = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const mapPin = template.cloneNode(true);
-  mapPin.style = `left: ${ad.location.x}px; top: ${ad.location.y}px;`;
+  mapPin.style = `left: ${ad.location.x - 62 / 2}px; top: ${ad.location.y - 70}px;`;
   mapPin.children[0].src = ad.author.avatar;
   mapPin.children[0].alt = ad.offer.title;
   return mapPin;
