@@ -105,6 +105,7 @@ const addPins = function (array) {
   return fragment;
 };
 
-createPopup(ads[0]);
 let ads = generateAds();
+createPopup(ads[0]);
+
 document.querySelector(`.map__pins`).appendChild(addPins(ads));
