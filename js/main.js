@@ -18,11 +18,18 @@ const getRandomIntInclusive = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getRandomArray = function (array) {
+const shuffleArray = function (array) {
   const itemsQuantity = getRandomIntInclusive(1, array.length);
-  let newArray = [];
-  for (let i = 0; i < itemsQuantity; i++) {
-    newArray.push(array[i]);
+  let newArray = array.slice(0, itemsQuantity);
+  let currentIndex = newArray.length - 1;
+  let temporaryValue;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = getRandomIntInclusive(0, currentIndex);
+    temporaryValue = newArray[currentIndex];
+    newArray[currentIndex] = newArray[randomIndex];
+    newArray[randomIndex] = temporaryValue;
+    currentIndex--;
   }
   return newArray;
 };
@@ -40,9 +47,9 @@ const Offer = function () {
   this.guests = 3;
   this.checkin = TIMES[getRandomIntInclusive(0, TIMES.length - 1)];
   this.checkout = TIMES[getRandomIntInclusive(0, TIMES.length - 1)];
-  this.features = getRandomArray(FEATURES);
+  this.features = shuffleArray(FEATURES);
   this.description = `описание`;
-  this.photos = getRandomArray(IMG_SOURCES);
+  this.photos = shuffleArray(IMG_SOURCES);
 };
 
 const Coordinates = function () {
@@ -96,8 +103,8 @@ const createPopup = function (ad) {
 const createPin = function (ad) {
   const mapPin = templatePin.cloneNode(true);
   mapPin.style = `left: ${ad.location.x - 62 / 2}px; top: ${ad.location.y - 70}px;`;
-  mapPin.children[0].src = ad.author.avatar;
-  mapPin.children[0].alt = ad.offer.title;
+  mapPin.querySelector(`img`).src = ad.author.avatar;
+  mapPin.querySelector(`img`).alt = ad.offer.title;
   return mapPin;
 };
 
