@@ -6,7 +6,7 @@ const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 
-const typesMap = {
+const TYPES_MAP = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -84,7 +84,7 @@ const createPopup = function (ad) {
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
   mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span>`;
-  mapPopup.querySelector(`.popup__type`).textContent = typesMap[ad.offer.type];
+  mapPopup.querySelector(`.popup__type`).textContent = TYPES_MAP[ad.offer.type];
   mapPopup.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
   mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const features = mapPopup.querySelectorAll(`.popup__feature`);
