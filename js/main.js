@@ -6,6 +6,12 @@ const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 
+const typesMap = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`,
+};
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const mapPinsWidth = parseInt(getComputedStyle(mapPins).width, 10);
@@ -77,8 +83,8 @@ const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
-  mapPopup.querySelector(`.popup__text--price`).textContent = ad.offer.price;
-  mapPopup.querySelector(`.popup__type`).textContent = ad.offer.type;
+  mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span>`;
+  mapPopup.querySelector(`.popup__type`).textContent = typesMap[ad.offer.type];
   mapPopup.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
   mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const features = mapPopup.querySelectorAll(`.popup__feature`);
@@ -97,6 +103,7 @@ const createPopup = function (ad) {
     popupPhotoCopy.src = photo;
     popupPhotos.appendChild(popupPhotoCopy);
   });
+  mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
   return mapPopup;
 };
 
@@ -116,7 +123,11 @@ const addPins = function (array) {
   return fragment;
 };
 
-let ads = generateAds();
-createPopup(ads[0]);
+const addPopup = function (ad) {
+  const popup = createPopup(ad);
+  map.insertBefore(popup, map.querySelector(`.map__filter-container`));
+};
 
+let ads = generateAds();
 mapPins.appendChild(addPins(ads));
+addPopup(ads[0]);
