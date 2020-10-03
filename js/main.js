@@ -6,7 +6,7 @@ const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 
-const TYPES_MAP = {
+const typesMap = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
@@ -49,8 +49,8 @@ const Offer = function () {
   this.address = `600, 350`;
   this.price = 100;
   this.type = TYPES[getRandomIntInclusive(0, TYPES.length - 1)];
-  this.rooms = 3;
-  this.guests = 3;
+  this.rooms = 1;
+  this.guests = 1;
   this.checkin = TIMES[getRandomIntInclusive(0, TIMES.length - 1)];
   this.checkout = TIMES[getRandomIntInclusive(0, TIMES.length - 1)];
   this.features = shuffleArray(FEATURES);
@@ -83,9 +83,21 @@ const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
-  mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span>`;
-  mapPopup.querySelector(`.popup__type`).textContent = TYPES_MAP[ad.offer.type];
-  mapPopup.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
+  const price = mapPopup.querySelector(`.popup__text--price`);
+  price.textContent = price.textContent.slice(4, price.length);
+  price.insertAdjacentHTML(`afterbegin`, ad.offer.price);
+  mapPopup.querySelector(`.popup__type`).textContent = typesMap[ad.offer.type];
+  const getRoomWord = function (number) {
+    let word = `комнат`;
+    if (number === 1) {
+      word = `комната`;
+    }
+    if (number > 1 && number < 5) {
+      word = `комнаты`;
+    }
+    return word;
+  };
+  mapPopup.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} ${getRoomWord(ad.offer.rooms)} для ${ad.offer.guests} ${ad.offer.guests === 1 ? `гостя` : `гостей`}`;
   mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const features = mapPopup.querySelectorAll(`.popup__feature`);
   for (let feature of features) {
