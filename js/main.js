@@ -5,6 +5,9 @@ const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
+const MAP__PIN_MAIN_WIDTH = 62;
+const MAP__PIN_MAIN_HEIGHT = 62;
+const MAP__PIN_MAIN_POINTER = 22;
 
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
@@ -72,7 +75,6 @@ const generateAds = function () {
   return ads;
 };
 
-map.classList.remove(`map--faded`);
 const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
@@ -116,7 +118,105 @@ const addPins = function (array) {
   return fragment;
 };
 
-let ads = generateAds();
-createPopup(ads[0]);
+const adForm = document.querySelector(`.ad-form`);
+const adFormFieldsetList = adForm.querySelectorAll(`fieldset`);
+const mapFilters = document.querySelector(`.map__filters`);
+const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
+const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
+const mapPinMain = mapPins.querySelector(`.map__pin--main`);
 
-mapPins.appendChild(addPins(ads));
+const getCoordinate = function (value) {
+  return Math.round(parseInt(value, 10));
+};
+const addAddress = function () {
+  const addressInput = adForm.querySelector(`input[name="address"]`);
+  const x = getCoordinate(mapPinMain.style.left) + MAP__PIN_MAIN_WIDTH / 2;
+  let y = getCoordinate(mapPinMain.style.top) + MAP__PIN_MAIN_HEIGHT / 2;
+  if (!map.classList.contains(`map--faded`)) {
+    y += MAP__PIN_MAIN_HEIGHT / 2 + MAP__PIN_MAIN_POINTER;
+  }
+  addressInput.value = `${x}, ${y}`;
+};
+
+const disableElements = function () {
+  for (let i = 0; i < adFormFieldsetList.length; i++) {
+    adFormFieldsetList[i].setAttribute(`disabled`, `disabled`);
+  }
+  for (let i = 0; i < mapFiltersList.length; i++) {
+    mapFiltersList[i].setAttribute(`disabled`, `disabled`);
+  }
+  mapFeaturesFieldset.setAttribute(`disabled`, `disabled`);
+  addAddress();
+};
+
+disableElements();
+
+const activateElements = function () {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+  for (let i = 0; i < adFormFieldsetList.length; i++) {
+    adFormFieldsetList[i].removeAttribute(`disabled`, `disabled`);
+  }
+  for (let i = 0; i < mapFiltersList.length; i++) {
+    mapFiltersList[i].removeAttribute(`disabled`, `disabled`);
+  }
+  mapFeaturesFieldset.removeAttribute(`disabled`, `disabled`);
+  let ads = generateAds();
+  addPins(ads);
+  mapPins.appendChild(addPins(ads));
+  addAddress();
+};
+
+mapPinMain.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    activateElements();
+  }
+});
+
+mapPinMain.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activateElements();
+  }
+});
+
+const roomNumber = adForm.querySelector(`#room_number`);
+const capacity = adForm.querySelector(`#capacity`);
+
+const getInvalidCapacityOptions = function () {
+  let invalidOptions;
+  if (roomNumber.value === `1`) {
+    invalidOptions = capacity.querySelectorAll(`option:not([value="1"])`);
+  }
+  if (roomNumber.value === `2`) {
+    invalidOptions = capacity.querySelectorAll(`option:not([value="2"]):not([value="1"])`);
+  }
+  if (roomNumber.value === `3`) {
+    invalidOptions = capacity.querySelectorAll(`option[value="0"]`);
+  }
+  if (roomNumber.value === `100`) {
+    invalidOptions = capacity.querySelectorAll(`option:not([value="0"])`);
+  }
+  return invalidOptions;
+};
+
+let invalidOptions = getInvalidCapacityOptions();
+
+roomNumber.addEventListener(`input`, function () {
+  invalidOptions = getInvalidCapacityOptions();
+});
+
+const setCapacityValidity = function () {
+  capacity.setCustomValidity(``);
+  for (let i = 0; i < invalidOptions.length; i++) {
+    if (invalidOptions[i].value === capacity.value) {
+      capacity.setCustomValidity(`Не допустимый вариант`);
+    }
+  }
+  capacity.reportValidity();
+};
+
+setCapacityValidity();
+
+capacity.addEventListener(`input`, function () {
+  setCapacityValidity();
+});
