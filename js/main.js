@@ -83,21 +83,29 @@ const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
-  const price = mapPopup.querySelector(`.popup__text--price`);
-  price.textContent = price.textContent.slice(4, price.length);
-  price.insertAdjacentHTML(`afterbegin`, ad.offer.price);
+  mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span></p>`;
   mapPopup.querySelector(`.popup__type`).textContent = typesMap[ad.offer.type];
-  const getRoomWord = function (number) {
-    let word = `комнат`;
-    if (number === 1) {
-      word = `комната`;
+  const getCapacityString = function (rooms, guests) {
+    let roomsString = `комнат`;
+    if (rooms === 1) {
+      roomsString = `комната`;
     }
-    if (number > 1 && number < 5) {
-      word = `комнаты`;
+    if (rooms > 1 && rooms <= 3) {
+      roomsString = `комнаты`;
     }
-    return word;
+    if (rooms === 100) {
+      roomsString = `комнат`;
+    }
+    let guestsString = `для ${guests} гостей`;
+    if (guests === 1) {
+      guestsString = `для ${guests} гостя`;
+    }
+    if (guests === 0) {
+      guestsString = `не для гостей`;
+    }
+    return `${rooms} ${roomsString} ${guestsString}`;
   };
-  mapPopup.querySelector(`.popup__text--capacity`).textContent = `${ad.offer.rooms} ${getRoomWord(ad.offer.rooms)} для ${ad.offer.guests} ${ad.offer.guests === 1 ? `гостя` : `гостей`}`;
+  mapPopup.querySelector(`.popup__text--capacity`).textContent = getCapacityString(ad.offer.rooms, ad.offer.guests);
   mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const features = mapPopup.querySelectorAll(`.popup__feature`);
   for (let feature of features) {
