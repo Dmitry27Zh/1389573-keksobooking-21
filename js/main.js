@@ -8,6 +8,7 @@ const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http
 const MAP__PIN_MAIN_WIDTH = 62;
 const MAP__PIN_MAIN_HEIGHT = 62;
 const MAP__PIN_MAIN_POINTER = 22;
+const MOUSE_BUTTON = 0;
 
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
@@ -124,32 +125,28 @@ const mapFilters = document.querySelector(`.map__filters`);
 const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
 const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 const mapPinMain = mapPins.querySelector(`.map__pin--main`);
+const addressInput = adForm.querySelector(`#address`);
 
-const getCoordinate = function (value) {
-  return Math.round(parseInt(value, 10));
-};
-const addAddress = function () {
-  const addressInput = adForm.querySelector(`input[name="address"]`);
-  const x = getCoordinate(mapPinMain.style.left) + MAP__PIN_MAIN_WIDTH / 2;
-  let y = getCoordinate(mapPinMain.style.top) + MAP__PIN_MAIN_HEIGHT / 2;
-  if (!map.classList.contains(`map--faded`)) {
-    y += MAP__PIN_MAIN_HEIGHT / 2 + MAP__PIN_MAIN_POINTER;
-  }
-  addressInput.value = `${x}, ${y}`;
+const getCoordinateX = function (styleLeft, width) {
+  return parseInt(styleLeft, 10) + width / 2;
 };
 
-const disableElements = function () {
-  for (let i = 0; i < adFormFieldsetList.length; i++) {
-    adFormFieldsetList[i].setAttribute(`disabled`, `disabled`);
-  }
-  for (let i = 0; i < mapFiltersList.length; i++) {
-    mapFiltersList[i].setAttribute(`disabled`, `disabled`);
-  }
-  mapFeaturesFieldset.setAttribute(`disabled`, `disabled`);
-  addAddress();
+const getCoordinateY = function (styleTop, height) {
+  return parseInt(styleTop, 10) + height;
 };
 
-disableElements();
+const mapPinMainX = getCoordinateX(mapPinMain.style.left, MAP__PIN_MAIN_WIDTH);
+const mapPinMainY = getCoordinateY(mapPinMain.style.top, MAP__PIN_MAIN_HEIGHT + MAP__PIN_MAIN_POINTER);
+
+for (let i = 0; i < adFormFieldsetList.length; i++) {
+  adFormFieldsetList[i].setAttribute(`disabled`, `disabled`);
+}
+for (let i = 0; i < mapFiltersList.length; i++) {
+  mapFiltersList[i].setAttribute(`disabled`, `disabled`);
+}
+mapFeaturesFieldset.setAttribute(`disabled`, `disabled`);
+addressInput.value = `${mapPinMainX}, ${mapPinMainY - MAP__PIN_MAIN_POINTER - MAP__PIN_MAIN_HEIGHT * 0.5}`;
+
 
 const activateElements = function () {
   map.classList.remove(`map--faded`);
@@ -164,20 +161,25 @@ const activateElements = function () {
   let ads = generateAds();
   addPins(ads);
   mapPins.appendChild(addPins(ads));
-  addAddress();
+  addressInput.value = `${Math.round(mapPinMainX)}, ${Math.round(mapPinMainY)}`;
+  mapPinMain.removeEventListener(`mousedown`, mapPinMainMousedownHandler);
+  mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
 };
 
-mapPinMain.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
+const mapPinMainMousedownHandler = function (evt) {
+  if (evt.button === MOUSE_BUTTON) {
     activateElements();
   }
-});
+};
 
-mapPinMain.addEventListener(`keydown`, function (evt) {
+const mapPinMainKeydownHandler = function (evt) {
   if (evt.key === `Enter`) {
     activateElements();
   }
-});
+};
+mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
+
+mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 
 const roomNumber = adForm.querySelector(`#room_number`);
 const capacity = adForm.querySelector(`#capacity`);
@@ -209,7 +211,7 @@ const setCapacityValidity = function () {
   capacity.setCustomValidity(``);
   for (let i = 0; i < invalidOptions.length; i++) {
     if (invalidOptions[i].value === capacity.value) {
-      capacity.setCustomValidity(`Не допустимый вариант`);
+      capacity.setCustomValidity(`Недопустимый вариант`);
     }
   }
   capacity.reportValidity();
