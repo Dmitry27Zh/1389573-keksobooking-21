@@ -192,7 +192,7 @@ const capacity = adForm.querySelector(`#capacity`);
 const setCapacityValidity = function () {
   if (roomNumber.value === `1` && capacity.value !== `1`) {
     capacity.setCustomValidity(`Недопустимый вариант`);
-  } else if (roomNumber.value === `2` && (capacity.value !== `2` || capacity.value !== `1`)) {
+  } else if (roomNumber.value === `2` && capacity.value !== `2` && capacity.value !== `1`) {
     capacity.setCustomValidity(`Недопустимый вариант`);
   } else if (roomNumber.value === `3` && capacity.value === `0`) {
     capacity.setCustomValidity(`Недопустимый вариант`);
