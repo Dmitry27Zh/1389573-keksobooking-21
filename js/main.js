@@ -5,10 +5,8 @@ const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
-const MAP__PIN_MAIN_WIDTH = 62;
-const MAP__PIN_MAIN_HEIGHT = 62;
-const MAP__PIN_MAIN_POINTER = 22;
-const MOUSE_BUTTON = 0;
+const KEY_CLICK = `Enter`;
+const MOUSE_MAIN_BUTTON = 0;
 
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
@@ -125,18 +123,23 @@ const mapFilters = document.querySelector(`.map__filters`);
 const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
 const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 const mapPinMain = mapPins.querySelector(`.map__pin--main`);
+const mapPinMainImg = mapPinMain.querySelector(`img`);
 const addressInput = adForm.querySelector(`#address`);
 
+const MapPinMainSizes = {
+  WIDTH: mapPinMainImg.offsetWidth,
+  HEIGHT: mapPinMainImg.offsetHeight,
+  POINTER: 22,
+  WITH_POINTER_HEIGHT: mapPinMainImg.offsetHeight + 22,
+};
+
 const getCoordinateX = function (styleLeft, width) {
-  return parseInt(styleLeft, 10) + width / 2;
+  return Math.round(parseInt(styleLeft, 10) + width / 2);
 };
 
 const getCoordinateY = function (styleTop, height) {
-  return parseInt(styleTop, 10) + height;
+  return Math.round(parseInt(styleTop, 10) + height);
 };
-
-const mapPinMainX = getCoordinateX(mapPinMain.style.left, MAP__PIN_MAIN_WIDTH);
-const mapPinMainY = getCoordinateY(mapPinMain.style.top, MAP__PIN_MAIN_HEIGHT + MAP__PIN_MAIN_POINTER);
 
 for (let i = 0; i < adFormFieldsetList.length; i++) {
   adFormFieldsetList[i].setAttribute(`disabled`, `disabled`);
@@ -145,7 +148,8 @@ for (let i = 0; i < mapFiltersList.length; i++) {
   mapFiltersList[i].setAttribute(`disabled`, `disabled`);
 }
 mapFeaturesFieldset.setAttribute(`disabled`, `disabled`);
-addressInput.value = `${mapPinMainX}, ${mapPinMainY - MAP__PIN_MAIN_POINTER - MAP__PIN_MAIN_HEIGHT * 0.5}`;
+addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
+${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT) - MapPinMainSizes.POINTER - MapPinMainSizes.HEIGHT / 2}`;
 
 
 const activateElements = function () {
@@ -161,19 +165,20 @@ const activateElements = function () {
   let ads = generateAds();
   addPins(ads);
   mapPins.appendChild(addPins(ads));
-  addressInput.value = `${Math.round(mapPinMainX)}, ${Math.round(mapPinMainY)}`;
+  addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
+  ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT)}`;
   mapPinMain.removeEventListener(`mousedown`, mapPinMainMousedownHandler);
   mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
 };
 
 const mapPinMainMousedownHandler = function (evt) {
-  if (evt.button === MOUSE_BUTTON) {
+  if (evt.button === MOUSE_MAIN_BUTTON) {
     activateElements();
   }
 };
 
 const mapPinMainKeydownHandler = function (evt) {
-  if (evt.key === `Enter`) {
+  if (evt.key === KEY_CLICK) {
     activateElements();
   }
 };
@@ -184,40 +189,26 @@ mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 const roomNumber = adForm.querySelector(`#room_number`);
 const capacity = adForm.querySelector(`#capacity`);
 
-const getInvalidCapacityOptions = function () {
-  let invalidOptions;
-  if (roomNumber.value === `1`) {
-    invalidOptions = capacity.querySelectorAll(`option:not([value="1"])`);
-  }
-  if (roomNumber.value === `2`) {
-    invalidOptions = capacity.querySelectorAll(`option:not([value="2"]):not([value="1"])`);
-  }
-  if (roomNumber.value === `3`) {
-    invalidOptions = capacity.querySelectorAll(`option[value="0"]`);
-  }
-  if (roomNumber.value === `100`) {
-    invalidOptions = capacity.querySelectorAll(`option:not([value="0"])`);
-  }
-  return invalidOptions;
-};
-
-let invalidOptions = getInvalidCapacityOptions();
-
-roomNumber.addEventListener(`input`, function () {
-  invalidOptions = getInvalidCapacityOptions();
-});
-
 const setCapacityValidity = function () {
-  capacity.setCustomValidity(``);
-  for (let i = 0; i < invalidOptions.length; i++) {
-    if (invalidOptions[i].value === capacity.value) {
-      capacity.setCustomValidity(`Недопустимый вариант`);
-    }
+  if (roomNumber.value === `1` && capacity.value !== `1`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `2` && (capacity.value !== `2` || capacity.value !== `1`)) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `3` && capacity.value === `0`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `100` && capacity.value !== `0`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else {
+    capacity.setCustomValidity(``);
   }
   capacity.reportValidity();
 };
 
 setCapacityValidity();
+
+roomNumber.addEventListener(`input`, function () {
+  setCapacityValidity();
+});
 
 capacity.addEventListener(`input`, function () {
   setCapacityValidity();
