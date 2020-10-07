@@ -201,7 +201,6 @@ const setCapacityValidity = function () {
   } else {
     capacity.setCustomValidity(``);
   }
-  capacity.reportValidity();
 };
 
 setCapacityValidity();
