@@ -85,13 +85,28 @@ const createPopup = function (ad) {
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
   mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span></p>`;
   mapPopup.querySelector(`.popup__type`).textContent = Types[ad.offer.type.toUpperCase()];
-  const getCapacityString = function () {
-    const roomsNumber = ad.offer.rooms.toString();
-    const roomsLetter = roomsNumber.slice(-1) === `1` && roomsNumber.slice(-2) !== `11` ? `а` :
-    +roomsNumber.slice(-1) > 1 && +roomsNumber.slice(-1) < 5 && roomsNumber.slice(2) !== `12` ? `ы` :
-    ``;
+  const getCapacityString = function (rooms, guests) {
+    let roomsString = `комнат`;
+    if (rooms === 1) {
+      roomsString = `комната`;
+    }
+    if (rooms > 1 && rooms <= 3) {
+      roomsString = `комнаты`;
+    }
+    if (rooms === 100) {
+      roomsString = `комнат`;
+    }
+    let guestsString = `для ${guests} гостей`;
+    if (guests === 1) {
+      guestsString = `для ${guests} гостя`;
+    }
+    if (guests === 0) {
+      guestsString = `не для гостей`;
+    }
+    return `${rooms} ${roomsString} ${guestsString}`;
+
   };
-  mapPopup.querySelector(`.popup__text--capacity`).textContent = getCapacityString();
+  mapPopup.querySelector(`.popup__text--capacity`).textContent = getCapacityString(ad.offer.rooms, ad.offer.guests);
   mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
   const features = mapPopup.querySelectorAll(`.popup__feature`);
   for (let feature of features) {
