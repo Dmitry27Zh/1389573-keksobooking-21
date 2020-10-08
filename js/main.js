@@ -11,7 +11,7 @@ const MOUSE_MAIN_BUTTON = 0;
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const mapPinsWidth = parseInt(getComputedStyle(mapPins).width, 10);
-// const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
+const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const templatePin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
 const getRandomIntInclusive = function (min, max) {
@@ -74,7 +74,7 @@ const generateAds = function () {
   return ads;
 };
 
-/* const createPopup = function (ad) {
+const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
@@ -99,7 +99,7 @@ const generateAds = function () {
     popupPhotos.appendChild(popupPhotoCopy);
   });
   return mapPopup;
-}; */
+};
 
 const createPin = function (ad) {
   const mapPin = templatePin.cloneNode(true);
@@ -110,13 +110,14 @@ const createPin = function (ad) {
 };
 
 const addPins = function (array) {
-  let fragment = document.createDocumentFragment();
+  const fragment = document.createDocumentFragment();
   array.forEach(function (item) {
     fragment.appendChild(createPin(item));
   });
   return fragment;
 };
 
+const ads = generateAds();
 const adForm = document.querySelector(`.ad-form`);
 const adFormFieldsetList = adForm.querySelectorAll(`fieldset`);
 const mapFilters = document.querySelector(`.map__filters`);
@@ -125,6 +126,7 @@ const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 const mapPinMain = mapPins.querySelector(`.map__pin--main`);
 const mapPinMainImg = mapPinMain.querySelector(`img`);
 const addressInput = adForm.querySelector(`#address`);
+let mapPinsList;
 
 const MapPinMainSizes = {
   WIDTH: mapPinMainImg.offsetWidth,
@@ -182,6 +184,10 @@ addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WI
 mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
 mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 
+const openCard = function (evt) {
+  const index = Array.from(mapPinsList).indexOf(evt.currentTarget);
+  map.insertBefore(createPopup(ads[index]), map.querySelector(`.map__filters-container`));
+};
 
 const activateElements = function () {
   map.classList.remove(`map--faded`);
@@ -193,7 +199,6 @@ const activateElements = function () {
     mapFiltersList[i].removeAttribute(`disabled`);
   }
   mapFeaturesFieldset.removeAttribute(`disabled`);
-  let ads = generateAds();
   mapPins.appendChild(addPins(ads));
   addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
   ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT)}`;
@@ -206,4 +211,11 @@ const activateElements = function () {
   capacity.addEventListener(`input`, function () {
     setCapacityValidity();
   });
+  mapPinsList = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+  for (let i = 0; i < mapPinsList.length; i++) {
+    mapPinsList[i].addEventListener(`click`, function (evt) {
+      console.log(Array.from(mapPinsList).indexOf(evt.currentTarget));
+      openCard(evt);
+    });
+  }
 };
