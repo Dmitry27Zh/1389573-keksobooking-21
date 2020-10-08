@@ -11,7 +11,7 @@ const MOUSE_MAIN_BUTTON = 0;
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const mapPinsWidth = parseInt(getComputedStyle(mapPins).width, 10);
-const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
+// const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const templatePin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
 const getRandomIntInclusive = function (min, max) {
@@ -74,7 +74,7 @@ const generateAds = function () {
   return ads;
 };
 
-const createPopup = function (ad) {
+/* const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
@@ -99,7 +99,7 @@ const createPopup = function (ad) {
     popupPhotos.appendChild(popupPhotoCopy);
   });
   return mapPopup;
-};
+}; */
 
 const createPin = function (ad) {
   const mapPin = templatePin.cloneNode(true);
@@ -141,36 +141,6 @@ const getCoordinateY = function (styleTop, height) {
   return Math.round(parseInt(styleTop, 10) + height);
 };
 
-for (let i = 0; i < adFormFieldsetList.length; i++) {
-  adFormFieldsetList[i].setAttribute(`disabled`, `disabled`);
-}
-for (let i = 0; i < mapFiltersList.length; i++) {
-  mapFiltersList[i].setAttribute(`disabled`, `disabled`);
-}
-mapFeaturesFieldset.setAttribute(`disabled`, `disabled`);
-addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
-${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT) - MapPinMainSizes.POINTER - MapPinMainSizes.HEIGHT / 2}`;
-
-
-const activateElements = function () {
-  map.classList.remove(`map--faded`);
-  adForm.classList.remove(`ad-form--disabled`);
-  for (let i = 0; i < adFormFieldsetList.length; i++) {
-    adFormFieldsetList[i].removeAttribute(`disabled`, `disabled`);
-  }
-  for (let i = 0; i < mapFiltersList.length; i++) {
-    mapFiltersList[i].removeAttribute(`disabled`, `disabled`);
-  }
-  mapFeaturesFieldset.removeAttribute(`disabled`, `disabled`);
-  let ads = generateAds();
-  addPins(ads);
-  mapPins.appendChild(addPins(ads));
-  addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
-  ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT)}`;
-  mapPinMain.removeEventListener(`mousedown`, mapPinMainMousedownHandler);
-  mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
-};
-
 const mapPinMainMousedownHandler = function (evt) {
   if (evt.button === MOUSE_MAIN_BUTTON) {
     activateElements();
@@ -182,9 +152,6 @@ const mapPinMainKeydownHandler = function (evt) {
     activateElements();
   }
 };
-mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
-
-mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 
 const roomNumber = adForm.querySelector(`#room_number`);
 const capacity = adForm.querySelector(`#capacity`);
@@ -203,12 +170,40 @@ const setCapacityValidity = function () {
   }
 };
 
-setCapacityValidity();
+for (let i = 0; i < adFormFieldsetList.length; i++) {
+  adFormFieldsetList[i].setAttribute(`disabled`, `true`);
+}
+for (let i = 0; i < mapFiltersList.length; i++) {
+  mapFiltersList[i].setAttribute(`disabled`, `true`);
+}
+mapFeaturesFieldset.setAttribute(`disabled`, `true`);
+addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
+ ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT) - MapPinMainSizes.POINTER - MapPinMainSizes.HEIGHT / 2}`;
+mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
+mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 
-roomNumber.addEventListener(`input`, function () {
-  setCapacityValidity();
-});
 
-capacity.addEventListener(`input`, function () {
+const activateElements = function () {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+  for (let i = 0; i < adFormFieldsetList.length; i++) {
+    adFormFieldsetList[i].removeAttribute(`disabled`);
+  }
+  for (let i = 0; i < mapFiltersList.length; i++) {
+    mapFiltersList[i].removeAttribute(`disabled`);
+  }
+  mapFeaturesFieldset.removeAttribute(`disabled`);
+  let ads = generateAds();
+  mapPins.appendChild(addPins(ads));
+  addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WIDTH)},
+  ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT)}`;
+  mapPinMain.removeEventListener(`mousedown`, mapPinMainMousedownHandler);
+  mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
   setCapacityValidity();
-});
+  roomNumber.addEventListener(`input`, function () {
+    setCapacityValidity();
+  });
+  capacity.addEventListener(`input`, function () {
+    setCapacityValidity();
+  });
+};
