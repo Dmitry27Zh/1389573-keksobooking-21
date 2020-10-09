@@ -11,7 +11,6 @@ const MOUSE_MAIN_BUTTON = 0;
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const mapPinsWidth = parseInt(getComputedStyle(mapPins).width, 10);
-// const templateCard = document.querySelector(`#card`).content.querySelector(`.popup`);
 const templatePin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
 const getRandomIntInclusive = function (min, max) {
