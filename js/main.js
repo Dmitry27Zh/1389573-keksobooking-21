@@ -8,12 +8,6 @@ const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http
 const KEY_CLICK = `Enter`;
 const MOUSE_MAIN_BUTTON = 0;
 
-const Types = {
-  PALACE: `Дворец`,
-  FLAT: `Квартира`,
-  HOUSE: `Дом`,
-  BUNGALOW: `Бунгало`,
-};
 const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const mapPinsWidth = parseInt(getComputedStyle(mapPins).width, 10);
@@ -79,55 +73,6 @@ const generateAds = function () {
   }
   return ads;
 };
-
-/* const createPopup = function (ad) {
-  const mapPopup = templateCard.cloneNode(true);
-  mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
-  mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
-  mapPopup.querySelector(`.popup__text--price`).innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span></p>`;
-  mapPopup.querySelector(`.popup__type`).textContent = Types[ad.offer.type.toUpperCase()];
-  const getCapacityString = function (rooms, guests) {
-    let roomsString = `комнат`;
-    if (rooms === 1) {
-      roomsString = `комната`;
-    }
-    if (rooms > 1 && rooms <= 3) {
-      roomsString = `комнаты`;
-    }
-    if (rooms === 100) {
-      roomsString = `комнат`;
-    }
-    let guestsString = `для ${guests} гостей`;
-    if (guests === 1) {
-      guestsString = `для ${guests} гостя`;
-    }
-    if (guests === 0) {
-      guestsString = `не для гостей`;
-    }
-    return `${rooms} ${roomsString} ${guestsString}`;
-
-  };
-  mapPopup.querySelector(`.popup__text--capacity`).textContent = getCapacityString(ad.offer.rooms, ad.offer.guests);
-  mapPopup.querySelector(`.popup__text--time`).textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
-  const features = mapPopup.querySelectorAll(`.popup__feature`);
-  for (let feature of features) {
-    feature.classList.add(`hidden`);
-  }
-  ad.offer.features.forEach(function (feature) {
-    mapPopup.querySelector(`.popup__feature--${feature}`).classList.remove(`hidden`);
-  });
-  mapPopup.querySelector(`.popup__description`).textContent = ad.offer.description;
-  const popupPhotos = mapPopup.querySelector(`.popup__photos`);
-  const popupPhoto = popupPhotos.querySelector(`.popup__photo`);
-  popupPhotos.removeChild(popupPhoto);
-  ad.offer.photos.forEach(function (photo) {
-    const popupPhotoCopy = popupPhoto.cloneNode(true);
-    popupPhotoCopy.src = photo;
-    popupPhotos.appendChild(popupPhotoCopy);
-  });
-  mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
-  return mapPopup;
-}; */
 
 const createPin = function (ad) {
   const mapPin = templatePin.cloneNode(true);
