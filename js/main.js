@@ -5,7 +5,8 @@ const TYPES = [`palace`, `flat`, `house`, `bungalow`];
 const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
-const KEY_CLICK = `Enter`;
+const KEY_OPEN = `Enter`;
+const KEY_CLOSE = `Escape`;
 const MOUSE_MAIN_BUTTON = 0;
 
 const map = document.querySelector(`.map`);
@@ -76,6 +77,7 @@ const generateAds = function () {
 
 const createPopup = function (ad) {
   const mapPopup = templateCard.cloneNode(true);
+  mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
   mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
   mapPopup.querySelector(`.popup__text--address`).textContent = ad.offer.address;
   mapPopup.querySelector(`.popup__text--price`).textContent = ad.offer.price;
@@ -120,7 +122,8 @@ const addPins = function (array) {
 const ads = generateAds();
 const adForm = document.querySelector(`.ad-form`);
 const adFormFieldsetList = adForm.querySelectorAll(`fieldset`);
-const mapFilters = document.querySelector(`.map__filters`);
+const mapFiltersContainer = map.querySelector(`.map__filters-container`);
+const mapFilters = mapFiltersContainer.querySelector(`.map__filters`);
 const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
 const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 const mapPinMain = mapPins.querySelector(`.map__pin--main`);
@@ -150,13 +153,37 @@ const mapPinMainMousedownHandler = function (evt) {
 };
 
 const mapPinMainKeydownHandler = function (evt) {
-  if (evt.key === KEY_CLICK) {
+  if (evt.key === KEY_OPEN) {
     activateElements();
   }
 };
 
+const type = adForm.querySelector(`#type`);
+const price = adForm.querySelector(`#price`);
 const roomNumber = adForm.querySelector(`#room_number`);
 const capacity = adForm.querySelector(`#capacity`);
+const timein = adForm.querySelector(`#timein`);
+const timeout = adForm.querySelector(`#timeout`);
+const timeInput = adForm.querySelector(`.ad-form__element--time`);
+
+const setPriceMinValue = function () {
+  if (type.value === `bungalow`) {
+    price.setAttribute(`min`, `0`);
+    price.setAttribute(`placeholder`, `0`);
+  }
+  if (type.value === `flat`) {
+    price.setAttribute(`min`, `1000`);
+    price.setAttribute(`placeholder`, `1000`);
+  }
+  if (type.value === `house`) {
+    price.setAttribute(`min`, `5000`);
+    price.setAttribute(`placeholder`, `5000`);
+  }
+  if (type.value === `palace`) {
+    price.setAttribute(`min`, `10000`);
+    price.setAttribute(`placeholder`, `10000`);
+  }
+};
 
 const setCapacityValidity = function () {
   if (roomNumber.value === `1` && capacity.value !== `1`) {
@@ -184,9 +211,46 @@ addressInput.value = `${getCoordinateX(mapPinMain.style.left, MapPinMainSizes.WI
 mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
 mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
 
+let createdPopup;
+let popupClose;
+let currentTarget;
+
 const openCard = function (evt) {
-  const index = Array.from(mapPinsList).indexOf(evt.currentTarget);
-  map.insertBefore(createPopup(ads[index]), map.querySelector(`.map__filters-container`));
+  currentTarget = evt.currentTarget;
+  currentTarget.removeEventListener(`click`, mapPinClickHandler);
+  currentTarget.classList.add(`.map__pin--active`);
+  const index = Array.from(mapPinsList).indexOf(currentTarget);
+  createdPopup = createPopup(ads[index]);
+  map.insertBefore(createdPopup, mapFiltersContainer);
+  popupClose = createdPopup.querySelector(`.popup__close`);
+  popupClose.addEventListener(`click`, popupCloseClickHadnler);
+  document.addEventListener(`keydown`, popupKeydownHandler);
+};
+
+const closeCard = function () {
+  currentTarget.classList.remove(`.map__pin--active`);
+  currentTarget.addEventListener(`click`, mapPinClickHandler);
+  map.removeChild(createdPopup);
+  createdPopup = undefined;
+  popupClose.removeEventListener(`click`, popupCloseClickHadnler);
+  document.removeEventListener(`keydown`, popupKeydownHandler);
+};
+
+const mapPinClickHandler = function (evt) {
+  if (createdPopup) {
+    closeCard();
+  }
+  openCard(evt);
+};
+
+const popupCloseClickHadnler = function () {
+  closeCard();
+};
+
+const popupKeydownHandler = function (evt) {
+  if (evt.key === KEY_CLOSE) {
+    closeCard();
+  }
 };
 
 const activateElements = function () {
@@ -204,18 +268,26 @@ const activateElements = function () {
   ${getCoordinateY(mapPinMain.style.top, MapPinMainSizes.WITH_POINTER_HEIGHT)}`;
   mapPinMain.removeEventListener(`mousedown`, mapPinMainMousedownHandler);
   mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
+  setPriceMinValue();
   setCapacityValidity();
+  type.addEventListener(`input`, function () {
+    setPriceMinValue();
+  });
   roomNumber.addEventListener(`input`, function () {
     setCapacityValidity();
   });
   capacity.addEventListener(`input`, function () {
     setCapacityValidity();
   });
+  timeInput.addEventListener(`input`, function (evt) {
+    if (evt.target === timein) {
+      timeout.value = evt.target.value;
+    } else {
+      timein.value = evt.target.value;
+    }
+  });
   mapPinsList = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
   for (let i = 0; i < mapPinsList.length; i++) {
-    mapPinsList[i].addEventListener(`click`, function (evt) {
-      console.log(Array.from(mapPinsList).indexOf(evt.currentTarget));
-      openCard(evt);
-    });
+    mapPinsList[i].addEventListener(`click`, mapPinClickHandler);
   }
 };
