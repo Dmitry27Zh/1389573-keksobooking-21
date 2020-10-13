@@ -39,7 +39,7 @@
   };
 
   const popupKeydownHandler = function (evt) {
-    window.utis.isEscEvent(evt, closeCard);
+    window.utils.isEscEvent(evt, closeCard);
   };
 
   const mapPinClickHandler = function (evt) {
