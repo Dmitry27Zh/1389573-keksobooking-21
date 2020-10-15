@@ -13,41 +13,34 @@
   const addressInput = adForm.querySelector(`#address`);
 
   const fillAddress = function () {
-    addressInput.value = `${window.mapPinMain.x()},
-    ${window.mapPinMain.y()}`;
+    addressInput.value = `${window.mapPinMain.getCoordX()},
+    ${window.mapPinMain.getCoordY()}`;
+  };
+
+  const priceList = {
+    bungalow: `0`,
+    flat: `1000`,
+    house: `5000`,
+    palace: `10000`,
   };
 
   const setPriceMinValue = function () {
-    if (type.value === `bungalow`) {
-      price.setAttribute(`min`, `0`);
-      price.setAttribute(`placeholder`, `0`);
-    }
-    if (type.value === `flat`) {
-      price.setAttribute(`min`, `1000`);
-      price.setAttribute(`placeholder`, `1000`);
-    }
-    if (type.value === `house`) {
-      price.setAttribute(`min`, `5000`);
-      price.setAttribute(`placeholder`, `5000`);
-    }
-    if (type.value === `palace`) {
-      price.setAttribute(`min`, `10000`);
-      price.setAttribute(`placeholder`, `10000`);
-    }
+    price.setAttribute(`min`, priceList[type.value]);
+    price.setAttribute(`placeholder`, priceList[type.value]);
+  };
+
+  const capacityValidOptions = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0],
   };
 
   const setCapacityValidity = function () {
-    if (roomNumber.value === `1` && capacity.value !== `1`) {
-      capacity.setCustomValidity(`Недопустимый вариант`);
-    } else if (roomNumber.value === `2` && capacity.value !== `2` && capacity.value !== `1`) {
-      capacity.setCustomValidity(`Недопустимый вариант`);
-    } else if (roomNumber.value === `3` && capacity.value === `0`) {
-      capacity.setCustomValidity(`Недопустимый вариант`);
-    } else if (roomNumber.value === `100` && capacity.value !== `0`) {
-      capacity.setCustomValidity(`Недопустимый вариант`);
-    } else {
-      capacity.setCustomValidity(``);
-    }
+    const isValidOption = capacityValidOptions[roomNumber.value].some(function (option) {
+      return Number(capacity.value) === option;
+    });
+    return !isValidOption ? capacity.setCustomValidity(`Недопустимый вариант`) : capacity.setCustomValidity(``);
   };
 
   const timeInputSync = function (evt) {
@@ -57,11 +50,10 @@
       timein.value = evt.target.value;
     }
   };
-
   const disableForm = function () {
-    for (let i = 0; i < adFormFieldsetList.length; i++) {
-      adFormFieldsetList[i].setAttribute(`disabled`, `true`);
-    }
+    adFormFieldsetList.forEach(function (fieldset) {
+      fieldset.setAttribute(`disabled`, true);
+    });
     fillAddress();
   };
 
@@ -79,8 +71,8 @@
     timeInput.addEventListener(`input`, timeInputSync);
   };
 
-  window.form = {
-    disableForm,
-    enableForm,
+  window.AdForm = {
+    disable: disableForm,
+    enable: enableForm,
   };
 })();

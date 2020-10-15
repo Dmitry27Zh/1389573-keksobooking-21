@@ -2,8 +2,6 @@
 
 (function () {
   const map = document.querySelector(`.map`);
-  const mapPins = map.querySelector(`.map__pins`);
-
   const mapFiltersContainer = map.querySelector(`.map__filters-container`);
   const mapFilters = mapFiltersContainer.querySelector(`.map__filters`);
   const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
@@ -50,9 +48,9 @@
   };
 
   const disableMap = function () {
-    for (let i = 0; i < mapFiltersList.length; i++) {
-      mapFiltersList[i].setAttribute(`disabled`, `true`);
-    }
+    mapFiltersList.forEach(function (filter) {
+      filter.setAttribute(`disabled`, true);
+    });
     mapFeaturesFieldset.setAttribute(`disabled`, `true`);
   };
 
@@ -60,12 +58,11 @@
 
   const enableMap = function () {
     map.classList.remove(`map--faded`);
-    window.mapPinMain.activate();
-    for (let i = 0; i < mapFiltersList.length; i++) {
-      mapFiltersList[i].removeAttribute(`disabled`);
-    }
+    mapFiltersList.forEach(function (filter) {
+      filter.removeAttribute(`disabled`);
+    });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    mapPins.appendChild(window.pin.addPins(window.data.ads));
+    window.pin.addPins();
     mapPinsList = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
     for (let i = 0; i < mapPinsList.length; i++) {
       mapPinsList[i].addEventListener(`click`, mapPinClickHandler);
@@ -74,7 +71,6 @@
 
   window.map = {
     element: map,
-    mapPins,
     disableMap,
     enableMap,
   };

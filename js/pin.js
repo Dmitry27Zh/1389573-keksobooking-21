@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  const mapPins = window.map.element.querySelector(`.map__pins`);
+
   const templatePin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const createPin = function (ad) {
@@ -11,7 +13,7 @@
     return mapPin;
   };
 
-  const addPins = function (array) {
+  const createPins = function (array) {
     const fragment = document.createDocumentFragment();
     array.forEach(function (item) {
       fragment.appendChild(createPin(item));
@@ -19,7 +21,12 @@
     return fragment;
   };
 
+  const addPins = function () {
+    mapPins.appendChild(createPins(window.data.ads));
+  };
+
   window.pin = {
+    mapPins,
     addPins,
   };
 })();

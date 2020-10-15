@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  const mapPinMain = window.map.mapPins.querySelector(`.map__pin--main`);
+  const mapPinMain = window.pin.mapPins.querySelector(`.map__pin--main`);
   const mapPinMainImg = mapPinMain.querySelector(`img`);
 
   const MapPinMainSizes = {
@@ -15,29 +15,38 @@
     }
   };
 
+  const getCoordX = function () {
+    return Math.round(mapPinMain.offsetLeft + MapPinMainSizes.Width / 2);
+  };
+  const getCoordY = function () {
+    return Math.round(mapPinMain.offsetTop + MapPinMainSizes.Height);
+  };
+
+  const mapPinMainMousedownHandler = function (evt) {
+    window.utils.isMousedownEvent(evt, function () {
+      if (window.map.element.classList.contains(`map--faded`)) {
+        window.main.activateElements();
+        mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
+      }
+    });
+  };
+
+  const mapPinMainKeydownHandler = function (evt) {
+    window.utils.isEnterEvent(evt, function () {
+      window.main.activateElements();
+      mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
+    });
+  };
+
   const activateMapPinMain = function () {
+    mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
+    mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
     MapPinMainSizes.changeActivatedHeight();
   };
 
-  const getCoordinateX = function (styleLeft, width) {
-    return Math.round(parseInt(styleLeft, 10) + width / 2);
-  };
-
-  const getCoordinateY = function (styleTop, height) {
-    return Math.round(parseInt(styleTop, 10) + height);
-  };
-
-  const mapPinMainX = function () {
-    return getCoordinateX(mapPinMain.style.left, MapPinMainSizes.Width);
-  };
-  const mapPinMainY = function () {
-    return getCoordinateY(mapPinMain.style.top, MapPinMainSizes.Height);
-  };
-
   window.mapPinMain = {
-    element: mapPinMain,
     activate: activateMapPinMain,
-    x: mapPinMainX,
-    y: mapPinMainY,
+    getCoordX,
+    getCoordY,
   };
 })();

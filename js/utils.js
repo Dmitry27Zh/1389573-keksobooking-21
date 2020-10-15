@@ -3,7 +3,7 @@
 (function () {
   const KEY_OPEN = `Enter`;
   const KEY_CLOSE = `Escape`;
-  const MOUSE_MAIN_BUTTON = 0;
+  const MOUSE_LEFT_BUTTON = 0;
 
   const isEnterEvent = function (evt, action) {
     if (evt.key === KEY_OPEN) {
@@ -18,7 +18,7 @@
   };
 
   const isMousedownEvent = function (evt, action) {
-    if (evt.button === MOUSE_MAIN_BUTTON) {
+    if (evt.button === MOUSE_LEFT_BUTTON) {
       action();
     }
   };
