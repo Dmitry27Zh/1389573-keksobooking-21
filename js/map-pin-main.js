@@ -34,9 +34,10 @@
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY,
       };
-      console.log(mapPinMain.offsetTop - move.y)
+      const newCordY = mapPinMain.offsetTop - move.y < 131 ? 131 : mapPinMain.offsetTop - move.y;
+      console.log(mapPinMain.offsetTop - move.y);
       mapPinMain.style.left = `${mapPinMain.offsetLeft - move.x}px`;
-      mapPinMain.style.top = `${mapPinMain.offsetTop - move.y < 131 ? 131 : mapPinMain.offsetTop - move.y}px`;
+      mapPinMain.style.top = `${newCordY}px`;
 
       startCoords = {
         x: moveEvt.clientX,
@@ -46,12 +47,12 @@
 
     const onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-      mapPins.removeEventListener(`mousemove`, onMousemove);
-      mapPins.removeEventListener(`mouseup`, onMouseUp);
+      document.removeEventListener(`mousemove`, onMousemove);
+      document.removeEventListener(`mouseup`, onMouseUp);
     };
 
-    mapPins.addEventListener(`mousemove`, onMousemove);
-    mapPins.addEventListener(`mouseup`, onMouseUp);
+    document.addEventListener(`mousemove`, onMousemove);
+    document.addEventListener(`mouseup`, onMouseUp);
   };
 
   const mapPinMainMousedownHandler = function (evt) {
