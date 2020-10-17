@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  const mapPins = window.pin.mapPins;
   const mapPinMain = window.pin.mapPins.querySelector(`.map__pin--main`);
   const mapPinMainImg = mapPinMain.querySelector(`img`);
 
@@ -34,15 +33,32 @@
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY,
       };
-      const newCordY = mapPinMain.offsetTop - move.y < 131 ? 131 : mapPinMain.offsetTop - move.y;
-      console.log(mapPinMain.offsetTop - move.y);
-      mapPinMain.style.left = `${mapPinMain.offsetLeft - move.x}px`;
-      mapPinMain.style.top = `${newCordY}px`;
+      const getPinX = function (initialX, moveValueX) {
+        let x = initialX - moveValueX;
+        if (x < 0) {
+          x = 0;
+        } else if (x > window.pin.mapPins.offsetWidth - MapPinMainSizes.Width) {
+          x = window.pin.mapPins.offsetWidth - MapPinMainSizes.Width;
+        }
+        return x;
+      };
+      const getPinY = function (initialY, moveValueY) {
+        let y = initialY - moveValueY;
+        if (y < 131 - MapPinMainSizes.Height) {
+          y = 131 - MapPinMainSizes.Height;
+        } else if (y > 629 - MapPinMainSizes.Height) {
+          y = 629 - MapPinMainSizes.Height;
+        }
+        return y;
+      };
+      mapPinMain.style.left = `${getPinX(mapPinMain.offsetLeft, move.x)}px`;
+      mapPinMain.style.top = `${getPinY(mapPinMain.offsetTop, move.y)}px`;
 
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY,
       };
+      window.adForm.fillAddress();
     };
 
     const onMouseUp = function (upEvt) {

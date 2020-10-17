@@ -6,7 +6,6 @@
   const TIMES = [`12:00`, `13:00`, `14:00`];
   const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
   const IMG_SOURCES = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
-  const mapPinsWidth = window.pin.mapPins.offsetWidth;
 
   const Author = function (x) {
     this.avatar = `img/avatars/user0${x}.png`;
@@ -27,7 +26,7 @@
   };
 
   const Coordinates = function () {
-    this.x = window.utils.getRandomIntInclusive(1, mapPinsWidth - 1);
+    this.x = window.utils.getRandomIntInclusive(1, window.pin.mapPins.offsetWidth - 1);
     this.y = window.utils.getRandomIntInclusive(131, 629);
   };
 

@@ -71,8 +71,9 @@
     timeInput.addEventListener(`input`, timeInputSync);
   };
 
-  window.AdForm = {
+  window.adForm = {
     disable: disableForm,
     enable: enableForm,
+    fillAddress,
   };
 })();
