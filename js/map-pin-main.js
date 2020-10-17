@@ -34,9 +34,9 @@
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY,
       };
-
+      console.log(mapPinMain.offsetTop - move.y)
       mapPinMain.style.left = `${mapPinMain.offsetLeft - move.x}px`;
-      mapPinMain.style.top = `${mapPinMain.offsetTop - move.y}px`;
+      mapPinMain.style.top = `${mapPinMain.offsetTop - move.y < 131 ? 131 : mapPinMain.offsetTop - move.y}px`;
 
       startCoords = {
         x: moveEvt.clientX,
