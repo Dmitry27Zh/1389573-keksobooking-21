@@ -22,17 +22,8 @@
     return Math.round(mapPinMain.offsetTop + MapPinMainSizes.Height);
   };
 
-  const moveMapPinMain = function (evt) {
-    let startCoords = {
-      x: evt.clientX,
-      y: evt.clientY,
-    };
-
-    const onMousemove = function (moveEvt) {
-      const move = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY,
-      };
+  const moveMapPinMain = function (evt, moveSomething) {
+    moveSomething(evt, function (move) {
       const getPinX = function (initialX, moveValueX) {
         let x = initialX - moveValueX;
         if (x < 0) {
@@ -53,23 +44,10 @@
       };
       mapPinMain.style.left = `${getPinX(mapPinMain.offsetLeft, move.x)}px`;
       mapPinMain.style.top = `${getPinY(mapPinMain.offsetTop, move.y)}px`;
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY,
-      };
       window.adForm.fillAddress();
-    };
-
-    const onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-      document.removeEventListener(`mousemove`, onMousemove);
-      document.removeEventListener(`mouseup`, onMouseUp);
-    };
-
-    document.addEventListener(`mousemove`, onMousemove);
-    document.addEventListener(`mouseup`, onMouseUp);
+    });
   };
+
 
   const mapPinMainMousedownHandler = function (evt) {
     window.utils.isMousedownEvent(evt, function () {
@@ -77,7 +55,7 @@
         window.main.activateElements();
         mapPinMain.removeEventListener(`keydown`, mapPinMainKeydownHandler);
       }
-      moveMapPinMain(evt);
+      moveMapPinMain(evt, window.move.add);
     });
   };
 
