@@ -4,6 +4,7 @@
   const KEY_OPEN = `Enter`;
   const KEY_CLOSE = `Escape`;
   const MOUSE_LEFT_BUTTON = 0;
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 
   const isEnterEvent = function (evt, action) {
     if (evt.key === KEY_OPEN) {
@@ -45,11 +46,19 @@
     return newArray;
   };
 
+  const showErrorMessage = function (message) {
+    const errorElement = errorTemplate.cloneNode(`true`);
+    errorElement.querySelector(`.error__message`).textContent = message;
+    document.body.insertAdjacentElement(`afterbegin`, errorElement);
+  };
+
+
   window.utils = {
     isEnterEvent,
     isEscEvent,
     isMousedownEvent,
     getRandomIntInclusive,
     shuffleArray,
+    showErrorMessage,
   };
 })();

@@ -48,7 +48,7 @@
       openCard(evt);
     };
 
-    window.pin.addPins();
+    window.backend.load(window.pin.addPins, window.utils.showErrorMessage);
     const mapPinsList = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
     for (let i = 0; i < mapPinsList.length; i++) {

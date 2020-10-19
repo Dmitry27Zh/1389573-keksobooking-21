@@ -21,8 +21,8 @@
     return fragment;
   };
 
-  const addPins = function () {
-    mapPins.appendChild(createPins(window.data.ads));
+  const addPins = function (array) {
+    mapPins.appendChild(createPins(array));
   };
 
   window.pin = {
