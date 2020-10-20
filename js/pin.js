@@ -1,8 +1,7 @@
 'use strict';
 
 (function () {
-  const mapPins = window.map.element.querySelector(`.map__pins`);
-
+  const mapPins = window.map.mapPins;
   const templatePin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const createPin = function (ad) {
@@ -16,7 +15,10 @@
   const createPins = function (array) {
     const fragment = document.createDocumentFragment();
     array.forEach(function (item) {
-      fragment.appendChild(createPin(item));
+      const index = array.indexOf(item);
+      const pin = createPin(item);
+      pin.setAttribute(`data-index`, index);
+      fragment.appendChild(pin);
     });
     return fragment;
   };
@@ -25,15 +27,31 @@
     mapPins.appendChild(createPins(array));
   };
 
-  const addPinsEvent = function () {
-    mapPins.addEventListener(`click`, function (evt) {
-      console.log(evt.target);
-    });
+  const mapPinClickHandler = function (evt) {
+    const activePin = mapPins.querySelector(`.map__pin--active`);
+    if (activePin && activePin !== evt.target && activePin !== evt.target.parentElement
+      && evt.target.tagName === `IMG` && evt.target.parentElement.classList.contains(`map__pin`)) {
+      activePin.classList.remove(`map__pin--active`);
+    }
+    let pin;
+    if (evt.target.tagName === `IMG` && evt.target.parentElement.classList.contains(`map__pin`) &&
+      !evt.target.parentElement.classList.contains(`map__pin--main`)) {
+      pin = evt.target.parentElement;
+    } else if (evt.target.classList.contains(`map__pin`) && !evt.target.classList.contains(`map__pin--main`)) {
+      pin = evt.target;
+    }
+    if (!pin || evt.target.classList.contains(`map__pin--active`) ||
+      evt.target.parentElement.classList.contains(`map__pin--active`)) {
+      return;
+    }
+    pin.classList.add(`map__pin--active`);
+    const index = pin.getAttribute(`data-index`);
+    window.backend.load(window.card.createCard, window.utils.showErrorMessage, index);
   };
 
   window.pin = {
     mapPins,
     addPins,
-    addPinsEvent,
+    mapPinClickHandler,
   };
 })();

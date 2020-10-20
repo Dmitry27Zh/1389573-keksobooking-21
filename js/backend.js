@@ -9,7 +9,11 @@
     xhr.responseType = `json`;
     xhr.send();
     xhr.addEventListener(`load`, function () {
-      onSuccess(xhr.response);
+      if (index) {
+        onSuccess(xhr.response[index]);
+      } else {
+        onSuccess(xhr.response);
+      }
     });
     xhr.addEventListener(`error`, function () {
       onError(`Ошибка подключения к сети`);
