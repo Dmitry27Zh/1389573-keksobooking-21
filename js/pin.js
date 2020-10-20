@@ -25,8 +25,15 @@
     mapPins.appendChild(createPins(array));
   };
 
+  const addPinsEvent = function () {
+    mapPins.addEventListener(`click`, function (evt) {
+      console.log(evt.target);
+    });
+  };
+
   window.pin = {
     mapPins,
     addPins,
+    addPinsEvent,
   };
 })();

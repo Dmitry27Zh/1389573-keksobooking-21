@@ -52,7 +52,6 @@
     document.body.insertAdjacentElement(`afterbegin`, errorElement);
   };
 
-
   window.utils = {
     isEnterEvent,
     isEscEvent,

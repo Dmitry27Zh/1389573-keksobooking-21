@@ -7,6 +7,7 @@
   const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
   const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 
+
   const activateAdsViewing = function () {
     let createdPopup;
     let popupClose;
@@ -48,12 +49,6 @@
       openCard(evt);
     };
 
-    window.backend.load(window.pin.addPins, window.utils.showErrorMessage);
-    const mapPinsList = map.querySelectorAll(`.map__pin:not(.map__pin--main)`);
-
-    for (let i = 0; i < mapPinsList.length; i++) {
-      mapPinsList[i].addEventListener(`click`, mapPinClickHandler);
-    }
   };
 
   const disableMap = function () {
@@ -69,6 +64,8 @@
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
+    window.backend.load(window.pin.addPins, window.utils.showErrorMessage);
+    window.pin.addPinsEvent();
     activateAdsViewing();
   };
 
