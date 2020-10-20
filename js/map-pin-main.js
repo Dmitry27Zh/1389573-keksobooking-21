@@ -3,6 +3,8 @@
 (function () {
   const mapPinMain = window.pin.mapPins.querySelector(`.map__pin--main`);
   const mapPinMainImg = mapPinMain.querySelector(`img`);
+  const mapPinsMinCoord = 131;
+  const mapPinsMaxCoord = 639;
 
   const MapPinMainSizes = {
     Width: mapPinMainImg.offsetWidth,
@@ -26,19 +28,22 @@
     moveSomething(evt, function (move) {
       const getPinX = function (initialX, moveValueX) {
         let x = initialX - moveValueX;
+        const maxCoord = window.pin.mapPins.offsetWidth - MapPinMainSizes.Width;
         if (x < 0) {
           x = 0;
-        } else if (x > window.pin.mapPins.offsetWidth - MapPinMainSizes.Width) {
-          x = window.pin.mapPins.offsetWidth - MapPinMainSizes.Width;
+        } else if (x > maxCoord) {
+          x = maxCoord;
         }
         return x;
       };
       const getPinY = function (initialY, moveValueY) {
         let y = initialY - moveValueY;
-        if (y < 131 - MapPinMainSizes.Height) {
-          y = 131 - MapPinMainSizes.Height;
-        } else if (y > 629 - MapPinMainSizes.Height) {
-          y = 629 - MapPinMainSizes.Height;
+        const minCoord = mapPinsMinCoord - MapPinMainSizes.Height;
+        const maxCoord = mapPinsMaxCoord - MapPinMainSizes.Height;
+        if (y < minCoord) {
+          y = minCoord;
+        } else if (y > maxCoord) {
+          y = maxCoord;
         }
         return y;
       };
