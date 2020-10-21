@@ -11,6 +11,7 @@
   };
 
   const createCard = function (ad) {
+
     const openedCard = window.map.element.querySelector(`.popup`);
     if (openedCard) {
       closeCard(openedCard);
@@ -44,11 +45,15 @@
     const popupCloseClickHadnler = function () {
       closeCard(mapPopup);
       popupClose.removeEventListener(`click`, popupCloseClickHadnler);
+      document.removeEventListener(`keydown`, popupKeydownHandler);
+      window.pin.deactivate();
     };
     const popupKeydownHandler = function (evt) {
       window.utils.isEscEvent(evt, function () {
         closeCard(mapPopup);
+        popupClose.removeEventListener(`click`, popupCloseClickHadnler);
         document.removeEventListener(`keydown`, popupKeydownHandler);
+        window.pin.deactivate();
       });
     };
     popupClose.addEventListener(`click`, popupCloseClickHadnler);

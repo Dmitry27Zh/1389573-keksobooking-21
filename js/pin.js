@@ -27,17 +27,25 @@
     mapPins.appendChild(createPins(array));
   };
 
+  const deactivatePin = function () {
+    const activePin = window.pin.mapPins.querySelector(`.map__pin--active`);
+    activePin.classList.remove(`map__pin--active`);
+  };
+
   const mapPinClickHandler = function (evt) {
     const activePin = mapPins.querySelector(`.map__pin--active`);
-    if (activePin && activePin !== evt.target && activePin !== evt.target.parentElement
-      && evt.target.tagName === `IMG` && evt.target.parentElement.classList.contains(`map__pin`)) {
-      activePin.classList.remove(`map__pin--active`);
-    }
     let pin;
-    if (evt.target.tagName === `IMG` && evt.target.parentElement.classList.contains(`map__pin`) &&
-      !evt.target.parentElement.classList.contains(`map__pin--main`)) {
+    if (evt.target.parentElement.classList.contains(`map__pin`) && !evt.target.parentElement.classList.contains(`map__pin--main`)
+      && !evt.target.parentElement.classList.contains(`map__pin--active`)) {
+      if (activePin) {
+        activePin.classList.remove(`map__pin--active`);
+      }
       pin = evt.target.parentElement;
-    } else if (evt.target.classList.contains(`map__pin`) && !evt.target.classList.contains(`map__pin--main`)) {
+    } else if (evt.target.classList.contains(`map__pin`) && !evt.target.classList.contains(`map__pin--main`)
+      && !evt.target.classList.contains(`map__pin--active`)) {
+      if (activePin) {
+        activePin.classList.remove(`map__pin--active`);
+      }
       pin = evt.target;
     }
     if (!pin || evt.target.classList.contains(`map__pin--active`) ||
@@ -53,5 +61,6 @@
     mapPins,
     addPins,
     mapPinClickHandler,
+    deactivate: deactivatePin,
   };
 })();
