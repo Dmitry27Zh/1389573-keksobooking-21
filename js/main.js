@@ -3,7 +3,7 @@
 (function () {
   const deactivateElements = function () {
     window.map.disableMap();
-    window.AdForm.disable();
+    window.adForm.disable();
     window.mapPinMain.activate();
   };
 
@@ -11,7 +11,7 @@
 
   const activateElements = function () {
     window.map.enableMap();
-    window.AdForm.enable();
+    window.adForm.enable();
   };
 
   window.main = {
