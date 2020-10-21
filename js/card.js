@@ -23,15 +23,14 @@
     };
     const closeCard = function () {
       const card = window.map.element.querySelector(`.popup`);
-      const closeButton = card.querySelector(`.popup__close`);
-      closeButton.removeEventListener(`click`, popupCloseClickHadnler);
-      document.removeEventListener(`keydown`, popupKeydownHandler);
-      window.map.element.removeChild(card);
+      if (card) {
+        const closeButton = card.querySelector(`.popup__close`);
+        closeButton.removeEventListener(`click`, popupCloseClickHadnler);
+        document.removeEventListener(`keydown`, popupKeydownHandler);
+        window.map.element.removeChild(card);
+      }
     };
-    const openedCard = window.map.element.querySelector(`.popup`);
-    if (openedCard) {
-      closeCard();
-    }
+    closeCard();
     const mapPopup = templateCard.cloneNode(true);
     mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
     mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
