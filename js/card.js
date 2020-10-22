@@ -10,27 +10,9 @@
     BUNGALOW: `Бунгало`,
   };
 
+  const closedCard = false;
+
   const createCard = function (ad) {
-    const popupCloseClickHadnler = function () {
-      closeCard();
-      window.pin.deactivate();
-    };
-    const popupKeydownHandler = function (evt) {
-      window.utils.isEscEvent(evt, function () {
-        closeCard();
-        window.pin.deactivate();
-      });
-    };
-    const closeCard = function () {
-      const card = window.map.element.querySelector(`.popup`);
-      if (card) {
-        const closeButton = card.querySelector(`.popup__close`);
-        closeButton.removeEventListener(`click`, popupCloseClickHadnler);
-        document.removeEventListener(`keydown`, popupKeydownHandler);
-        window.map.element.removeChild(card);
-      }
-    };
-    closeCard();
     const mapPopup = templateCard.cloneNode(true);
     mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
     mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
@@ -61,9 +43,30 @@
     popupClose.addEventListener(`click`, popupCloseClickHadnler);
     document.addEventListener(`keydown`, popupKeydownHandler);
     window.map.element.insertBefore(mapPopup, window.map.mapFiltersContainer);
+    closedCard = true;
+  };
+  const popupCloseClickHadnler = function () {
+    closeCard();
+  };
+  const popupKeydownHandler = function (evt) {
+    window.utils.isEscEvent(evt, function () {
+      closeCard();
+    });
+  };
+
+  const closeCard = function () {
+    const card = window.map.element.querySelector(`.popup`);
+    if (card) {
+      const closeButton = card.querySelector(`.popup__close`);
+      closeButton.removeEventListener(`click`, popupCloseClickHadnler);
+      document.removeEventListener(`keydown`, popupKeydownHandler);
+      window.map.element.removeChild(card);
+      closedCard = true;
+    }
   };
 
   window.card = {
+    closedCard,
     createCard,
   };
 })();
