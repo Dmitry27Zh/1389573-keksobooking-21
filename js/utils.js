@@ -46,11 +46,24 @@
     return newArray;
   };
 
-  const showErrorMessage = function (message) {
+  const showSaveErrorMessage = function (message) {
     const errorElement = errorTemplate.cloneNode(`true`);
     errorElement.querySelector(`.error__message`).textContent = message;
     document.body.insertAdjacentElement(`afterbegin`, errorElement);
   };
+
+  const showLoadErrorMessage = function (message) {
+    const errorElement = document.createElement(`div`);
+    errorElement.style = `z-index: 100; padding: 5px; border: 2px solid red; color: red; font-weight: bold`;
+    errorElement.style.position = `absolute`;
+    errorElement.style.top = `100px`;
+    errorElement.style.left = `50%`;
+    errorElement.style.transform = `translateX(-50%)`;
+    errorElement.style.fontSize = `30px`;
+    errorElement.textContent = message;
+    document.body.insertAdjacentElement(`afterbegin`, errorElement);
+  };
+
 
   window.utils = {
     isEnterEvent,
@@ -58,6 +71,7 @@
     isMousedownEvent,
     getRandomIntInclusive,
     shuffleArray,
-    showErrorMessage,
+    showLoadErrorMessage,
+    showSaveErrorMessage,
   };
 })();

@@ -21,7 +21,7 @@
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    window.backend.load(window.pin.addPins, window.utils.showErrorMessage);
+    window.backend.load(window.pin.addPins, window.utils.showLoadErrorMessage);
     mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
   };
 

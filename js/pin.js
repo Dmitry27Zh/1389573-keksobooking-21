@@ -25,16 +25,20 @@
   };
 
   const deactivatePin = function () {
-    const activePin = window.pin.mapPins.querySelector(`.map__pin--active`);
-    activePin.classList.remove(`map__pin--active`);
+    const activePin = mapPins.querySelector(`.map__pin--active`);
+    if (activePin) {
+      activePin.classList.remove(`map__pin--active`);
+    }
   };
 
   const mapPinClickHandler = function (evt) {
     let pin;
     if (evt.target.matches(`.map__pin:not(.map__pin--active):not(.map__pin--main)`)) {
       pin = evt.target;
+      deactivatePin();
     } else if (evt.target.parentElement.matches(`.map__pin:not(.map__pin--active):not(.map__pin--main)`)) {
       pin = evt.target.parentElement;
+      deactivatePin();
     } else {
       return;
     }

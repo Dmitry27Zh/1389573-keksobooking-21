@@ -10,9 +10,8 @@
     BUNGALOW: `Бунгало`,
   };
 
-  const closedCard = false;
-
   const createCard = function (ad) {
+    closeCard();
     const mapPopup = templateCard.cloneNode(true);
     mapPopup.querySelector(`.popup__avatar`).src = ad.author.avatar;
     mapPopup.querySelector(`.popup__title`).textContent = ad.offer.title;
@@ -43,7 +42,6 @@
     popupClose.addEventListener(`click`, popupCloseClickHadnler);
     document.addEventListener(`keydown`, popupKeydownHandler);
     window.map.element.insertBefore(mapPopup, window.map.mapFiltersContainer);
-    closedCard = true;
   };
   const popupCloseClickHadnler = function () {
     closeCard();
@@ -61,12 +59,10 @@
       closeButton.removeEventListener(`click`, popupCloseClickHadnler);
       document.removeEventListener(`keydown`, popupKeydownHandler);
       window.map.element.removeChild(card);
-      closedCard = true;
     }
   };
 
   window.card = {
-    closedCard,
     createCard,
   };
 })();
