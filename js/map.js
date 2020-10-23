@@ -21,8 +21,20 @@
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    window.backend.load(window.pin.addPins, window.utils.showLoadErrorMessage);
+    window.backend.load(window.pin.addPins, showLoadErrorMessage);
     mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
+  };
+
+  const showLoadErrorMessage = function (message) {
+    const errorElement = document.createElement(`div`);
+    errorElement.style = `z-index: 100; padding: 5px; border: 2px solid red; color: red; font-weight: bold`;
+    errorElement.style.position = `absolute`;
+    errorElement.style.top = `100px`;
+    errorElement.style.left = `50%`;
+    errorElement.style.transform = `translateX(-50%)`;
+    errorElement.style.fontSize = `30px`;
+    errorElement.textContent = message;
+    document.body.insertAdjacentElement(`afterbegin`, errorElement);
   };
 
   window.map = {
