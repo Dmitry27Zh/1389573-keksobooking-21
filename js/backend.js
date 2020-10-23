@@ -1,12 +1,20 @@
 'use strict';
 
 (function () {
-  const URL_LOAD = `https://21.javascript.pages.academy/keksobooking/data`;
+  const URL = {
+    get: `https://21.javascript.pages.academy/keksobooking/data`,
+    POST: `https://21.javascript.pages.academy/keksobooking`,
+  };
+
+  const createRequest = function (method) {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, URL[method]);
+    xhr.responseType = `json`;
+    return xhr;
+  };
 
   const load = function (onSuccess, onError) {
-    const xhr = new XMLHttpRequest();
-    xhr.open(`get`, URL_LOAD);
-    xhr.responseType = `json`;
+    const xhr = createRequest(`get`);
     xhr.send();
     xhr.addEventListener(`load`, function () {
       onSuccess(xhr.response);
@@ -16,7 +24,19 @@
     });
   };
 
+  const save = function (data, onSuccess, onError) {
+    const xhr = createRequest(`POST`);
+    xhr.send(data);
+    xhr.addEventListener(`load`, function () {
+      onSuccess();
+    });
+    xhr.addEventListener(`error`, function () {
+      onError();
+    });
+  };
+
   window.backend = {
     load,
+    save,
   };
 })();

@@ -11,6 +11,7 @@
   const timeout = adForm.querySelector(`#timeout`);
   const timeInput = adForm.querySelector(`.ad-form__element--time`);
   const addressInput = adForm.querySelector(`#address`);
+  const adFormReset = adForm.querySelector(`.ad-form__reset`);
 
   const fillAddress = function () {
     addressInput.value = `${window.mapPinMain.getCoordX()},
@@ -50,6 +51,47 @@
       timein.value = evt.target.value;
     }
   };
+
+  const showSaveMessage = function (status) {
+    const template = document.querySelector(`#${status}`).content.querySelector(`.${status}`);
+    const element = template.cloneNode(`true`);
+    document.body.insertAdjacentElement(`afterbegin`, element);
+    document.addEventListener(`click`, onClickMessage);
+    document.addEventListener(`keydown`, onKeydownMessage);
+  };
+
+  const closeMessage = function () {
+    document.body.removeChild(document.body.children[0]);
+    document.removeEventListener(`click`, onClickMessage);
+    document.removeEventListener(`keydown`, onKeydownMessage);
+  };
+
+  const onClickMessage = function () {
+    closeMessage();
+  };
+
+  const onKeydownMessage = function (evt) {
+    window.utils.isEscEvent(evt, closeMessage);
+  };
+
+  const showSaveErrorMessage = function () {
+    showSaveMessage(`error`);
+  };
+
+  const showSaveSuccessrMessage = function () {
+    showSaveMessage(`success`);
+  };
+
+  const adFormSubmitHandler = function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(adForm), showSaveSuccessrMessage, showSaveErrorMessage);
+  };
+
+  const adFormResetClickHandler = function (evt) {
+    evt.preventDefault();
+    adForm.reset();
+  };
+
   const disableForm = function () {
     adFormFieldsetList.forEach(function (fieldset) {
       fieldset.setAttribute(`disabled`, true);
@@ -59,9 +101,9 @@
 
   const enableForm = function () {
     adForm.classList.remove(`ad-form--disabled`);
-    for (let i = 0; i < adFormFieldsetList.length; i++) {
-      adFormFieldsetList[i].removeAttribute(`disabled`);
-    }
+    adFormFieldsetList.forEach(function (fieldset) {
+      fieldset.removeAttribute(`disabled`);
+    });
     fillAddress();
     setPriceMinValue();
     setCapacityValidity();
@@ -69,6 +111,8 @@
     roomNumber.addEventListener(`input`, setCapacityValidity);
     capacity.addEventListener(`input`, setCapacityValidity);
     timeInput.addEventListener(`input`, timeInputSync);
+    adForm.addEventListener(`submit`, adFormSubmitHandler);
+    adFormReset.addEventListener(`click`, adFormResetClickHandler);
   };
 
   window.adForm = {
