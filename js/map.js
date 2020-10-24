@@ -12,6 +12,8 @@
     type: mapFilters.querySelector(`#housing-type`),
   };
 
+  let adsListCurrent = [];
+
   const updatePins = function (ads, filterName) {
     const filteredAds = ads.filter(function (ad) {
       return ad.offer[filterName] === filterList[filterName].value;
@@ -21,7 +23,7 @@
   };
 
   const onTypeFilterChange = function () {
-    updatePins(adsList, `type`);
+    updatePins(adsListCurrent, `type`);
   };
 
   const disableMap = function () {
@@ -39,6 +41,7 @@
   let adsList = [];
   const onSuccessLoad = function (data) {
     adsList = data;
+    adsListCurrent = data;
     window.pin.addPins(data);
     map.classList.remove(`map--faded`);
     mapFiltersList.forEach(function (filter) {
