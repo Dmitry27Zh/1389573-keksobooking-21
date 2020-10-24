@@ -2,11 +2,27 @@
 
 (function () {
   const map = document.querySelector(`.map`);
-  const mapPins = map.querySelector(`.map__pins`);
+  const mapPins = window.pin.mapPins;
   const mapFiltersContainer = map.querySelector(`.map__filters-container`);
   const mapFilters = mapFiltersContainer.querySelector(`.map__filters`);
   const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
   const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
+
+  const filterList = {
+    type: mapFilters.querySelector(`#housing-type`),
+  };
+
+  const updatePins = function (ads, filterName) {
+    const filteredAds = ads.filter(function (ad) {
+      return ad.offer[filterName] === filterList[filterName].value;
+    });
+    window.card.close();
+    window.pin.addPins(filteredAds);
+  };
+
+  const onTypeFilterChange = function () {
+    updatePins(adsList, `type`);
+  };
 
   const disableMap = function () {
     mapFiltersList.forEach(function (filter) {
@@ -16,13 +32,20 @@
   };
 
   const enableMap = function () {
+    window.backend.load(onSuccessLoad, showLoadErrorMessage);
+    mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
+  };
+
+  let adsList = [];
+  const onSuccessLoad = function (data) {
+    adsList = data;
+    window.pin.addPins(data);
     map.classList.remove(`map--faded`);
     mapFiltersList.forEach(function (filter) {
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    window.backend.load(window.pin.addPins, showLoadErrorMessage);
-    mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
+    filterList.type.addEventListener(`input`, onTypeFilterChange);
   };
 
   const showLoadErrorMessage = function (message) {
@@ -40,7 +63,6 @@
   window.map = {
     element: map,
     mapFiltersContainer,
-    mapPins,
     disableMap,
     enableMap,
   };
