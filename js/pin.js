@@ -21,9 +21,16 @@
       pin.setAttribute(`data-index`, i);
       fragment.appendChild(pin);
     }
-    mapPins.innerHTML = ``;
+    removePins();
     mapPins.appendChild(fragment);
     adsList = ads;
+  };
+
+  const removePins = function () {
+    const mapPinsList = mapPins.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    mapPinsList.forEach(function (pin) {
+      mapPins.removeChild(pin);
+    });
   };
 
   const deactivatePin = function () {
