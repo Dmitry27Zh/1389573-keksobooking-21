@@ -12,7 +12,7 @@
     mapPin.querySelector(`img`).alt = ad.offer.title;
     return mapPin;
   };
-  let adsList;
+  let adsList = [];
   const addPins = function (ads) {
     const fragment = document.createDocumentFragment();
     const adsQuantity = ads.length > MAX_ADS_QUANTITY ? MAX_ADS_QUANTITY : ads.length;
@@ -24,6 +24,7 @@
     removePins();
     mapPins.appendChild(fragment);
     adsList = ads;
+    console.log(adsList)
   };
 
   const removePins = function () {
