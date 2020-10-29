@@ -2,7 +2,8 @@
 
 (function () {
   let ads = [];
-  const mapFilters = document.querySelector(`.map__filters`);
+  let activatedFilters = [];
+  let activatedFeatures = [];
 
   const getFilterName = function (filter) {
     let name;
@@ -13,7 +14,6 @@
     }
     return name;
   };
-
   const checkPrice = function (filter, price) {
     let isPriceActual = false;
     if (filter.value === `middle` && price > 10000 && price < 50000) {
@@ -26,12 +26,11 @@
     return isPriceActual;
   };
 
-  const checkFeature = function (filter, ad) {
-    let isFeatureHere = false;
-    if (filter.checked && ad.offer.features.includes(filter.value)) {
-      isFeatureHere = true;
-    }
-    return isFeatureHere;
+  const checkFeatures = function (ad) {
+    let isAdActual = activatedFeatures.every(function (feature) {
+      return ad.offer.features.includes(feature);
+    });
+    return isAdActual;
   };
 
   const checkAdByFilter = function (filter, ad) {
@@ -42,25 +41,57 @@
     } else if (filterName === `price`) {
       isAdActual = checkPrice(filter, ad.offer.price);
     } else if (filterName === `features`) {
-      isAdActual = checkFeature(filter, ad);
+      isAdActual = checkFeatures(ad);
     } else {
       isAdActual = String(ad.offer[filterName]) === filter.value ? true : false;
     }
     return isAdActual;
   };
 
-  const updatePins = function (filter) {
-    let filteredAds = ads.filter(function (ad) {
-      return checkAdByFilter(filter, ad);
+  const checkAdByFilters = function (filters, ad) {
+    let isAdActual = false;
+    if (filters.length === 0) {
+      isAdActual = true;
+    } else {
+      isAdActual = filters.every(function (filter) {
+        return checkAdByFilter(filter, ad);
+      });
+    }
+    return isAdActual;
+  };
+
+  const updatePins = function () {
+    const filteredAds = ads.filter(function (ad) {
+      return checkAdByFilters(activatedFilters, ad);
     });
+    console.log(activatedFilters)
     window.card.close();
     window.pin.addPins(filteredAds);
+  };
+
+  const mapFiltersInputHandler = function (evt) {
+    if (evt.target.name === `features`) {
+      if (!activatedFeatures.includes(evt.target.value)) {
+        activatedFeatures.push(evt.target.value);
+      } else {
+        const index = activatedFeatures.indexOf(evt.target.value);
+        activatedFeatures.splice(index, 1);
+      }
+    }
+    if (!activatedFilters.includes(evt.taget)) {
+      activatedFilters.push(evt.target);
+    } else if (evt.target.value === `any` && activatedFilters.includes(evt.target)) {
+      const index = activatedFilters.indexOf(evt.target);
+      activatedFilters.splice(index, 1);
+    }
+    console.log(activatedFeatures)
+    updatePins();
   };
 
   window.adsFiltration = {
     getAds(data) {
       ads = data;
     },
-    updatePins,
+    mapFiltersInputHandler,
   };
 })();

@@ -20,22 +20,6 @@
     mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
   };
 
-  const onTypeFilterChange = function () {
-    window.adsFiltration.updatePins(document.querySelector(`#housing-type`));
-  };
-
-  const onRoomsFilterChange = function () {
-    window.adsFiltration.updatePins(document.querySelector(`#housing-rooms`));
-  };
-
-  const onGuestsFilterChange = function () {
-    window.adsFiltration.updatePins(document.querySelector(`#housing-guests`));
-  };
-
-  const onPriceFilterChange = function () {
-    window.adsFiltration.updatePins(document.querySelector(`#housing-price`));
-  };
-
   const onSuccessLoad = function (data) {
     window.adsFiltration.getAds(data);
     window.pin.addPins(data);
@@ -44,16 +28,7 @@
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    mapFilters.querySelector(`#housing-type`).addEventListener(`input`, onTypeFilterChange);
-    document.querySelector(`#housing-rooms`).addEventListener(`input`, onRoomsFilterChange);
-    document.querySelector(`#housing-guests`).addEventListener(`input`, onGuestsFilterChange);
-    document.querySelector(`#housing-price`).addEventListener(`input`, onPriceFilterChange);
-    const checkBoxList = document.querySelectorAll(`.map__checkbox`);
-    for (let checkBox of checkBoxList) {
-      checkBox.addEventListener(`input`, function () {
-        window.adsFiltration.updatePins(checkBox);
-      });
-    }
+    mapFilters.addEventListener(`input`, window.adsFiltration.mapFiltersInputHandler);
   };
 
 

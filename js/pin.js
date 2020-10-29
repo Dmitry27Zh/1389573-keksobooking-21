@@ -24,7 +24,6 @@
     removePins();
     mapPins.appendChild(fragment);
     adsList = ads;
-    console.log(adsList)
   };
 
   const removePins = function () {
