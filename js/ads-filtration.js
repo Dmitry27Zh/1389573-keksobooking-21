@@ -64,7 +64,6 @@
     const filteredAds = ads.filter(function (ad) {
       return checkAdByFilters(activatedFilters, ad);
     });
-    console.log(activatedFilters)
     window.card.close();
     window.pin.addPins(filteredAds);
   };
@@ -78,13 +77,12 @@
         activatedFeatures.splice(index, 1);
       }
     }
-    if (!activatedFilters.includes(evt.taget)) {
+    if (!activatedFilters.includes(evt.target)) {
       activatedFilters.push(evt.target);
     } else if (evt.target.value === `any` && activatedFilters.includes(evt.target)) {
       const index = activatedFilters.indexOf(evt.target);
       activatedFilters.splice(index, 1);
     }
-    console.log(activatedFeatures)
     updatePins();
   };
 
