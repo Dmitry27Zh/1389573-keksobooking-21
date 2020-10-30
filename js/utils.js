@@ -45,27 +45,11 @@
     return newArray;
   };
 
-  const getDublicates = function (array) {
-    let uniqueItems = [];
-    let dublicates = [];
-    array.forEach(function (item) {
-      if (!uniqueItems.includes(item)) {
-        uniqueItems.push(item);
-      } else {
-        if (!dublicates.includes(item)) {
-          dublicates.push(item);
-        }
-      }
-    });
-    return dublicates;
-  };
-
   window.utils = {
     isEnterEvent,
     isEscEvent,
     isMousedownEvent,
     getRandomIntInclusive,
     shuffleArray,
-    getDublicates,
   };
 })();

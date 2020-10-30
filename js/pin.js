@@ -61,5 +61,6 @@
     addPins,
     adsList,
     mapPinClickHandler,
+    MAX_ADS_QUANTITY,
   };
 })();

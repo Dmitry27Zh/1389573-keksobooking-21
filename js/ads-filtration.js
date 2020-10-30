@@ -61,9 +61,15 @@
   };
 
   const updatePins = function () {
-    const filteredAds = ads.filter(function (ad) {
-      return checkAdByFilters(activatedFilters, ad);
-    });
+    let filteredAds = [];
+    for (let i = 0; i < ads.length; i++) {
+      if (checkAdByFilters(activatedFilters, ads[i])) {
+        filteredAds.push(ads[i]);
+      }
+      if (filteredAds.length === window.pin.MAX_ADS_QUANTITY) {
+        break;
+      }
+    }
     window.card.close();
     window.pin.addPins(filteredAds);
   };
