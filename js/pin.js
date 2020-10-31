@@ -59,6 +59,7 @@
   window.pin = {
     mapPins,
     addPins,
+    removePins,
     adsList,
     mapPinClickHandler,
     MAX_ADS_QUANTITY,

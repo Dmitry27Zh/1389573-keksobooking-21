@@ -78,18 +78,20 @@
     showSaveMessage(`error`);
   };
 
-  const showSaveSuccessrMessage = function () {
+  const onSuccessSubmit = function () {
     showSaveMessage(`success`);
+    window.main.deactivateElements();
   };
 
   const adFormSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), showSaveSuccessrMessage, showSaveErrorMessage);
+    window.backend.save(new FormData(adForm), onSuccessSubmit, showSaveErrorMessage);
   };
 
   const adFormResetClickHandler = function (evt) {
     evt.preventDefault();
     adForm.reset();
+    window.main.deactivateElements();
   };
 
   const disableForm = function () {
@@ -97,6 +99,12 @@
       fieldset.setAttribute(`disabled`, true);
     });
     fillAddress();
+    type.removeEventListener(`input`, setPriceMinValue);
+    roomNumber.removeEventListener(`input`, setCapacityValidity);
+    capacity.removeEventListener(`input`, setCapacityValidity);
+    timeInput.removeEventListener(`input`, timeInputSync);
+    adForm.removeEventListener(`submit`, adFormSubmitHandler);
+    adFormReset.removeEventListener(`click`, adFormResetClickHandler);
   };
 
   const enableForm = function () {
