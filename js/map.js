@@ -2,7 +2,7 @@
 
 (function () {
   const map = document.querySelector(`.map`);
-  const mapPins = map.querySelector(`.map__pins`);
+  const mapPins = window.pin.mapPins;
   const mapFiltersContainer = map.querySelector(`.map__filters-container`);
   const mapFilters = mapFiltersContainer.querySelector(`.map__filters`);
   const mapFiltersList = mapFilters.querySelectorAll(`.map__filter`);
@@ -16,22 +16,29 @@
   };
 
   const enableMap = function () {
+    window.backend.load(onSuccessLoad, showLoadErrorMessage);
+    mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
+  };
+
+  const onSuccessLoad = function (data) {
+    window.adsFiltration.getAds(data);
+    window.pin.addPins(data);
     map.classList.remove(`map--faded`);
     mapFiltersList.forEach(function (filter) {
       filter.removeAttribute(`disabled`);
     });
     mapFeaturesFieldset.removeAttribute(`disabled`);
-    window.backend.load(window.pin.addPins, showLoadErrorMessage);
-    mapPins.addEventListener(`click`, window.pin.mapPinClickHandler);
+    mapFilters.addEventListener(`input`, window.adsFiltration.mapFiltersInputHandler);
   };
+
 
   const showLoadErrorMessage = function (message) {
     const errorElement = document.createElement(`div`);
-    errorElement.style = `z-index: 100; padding: 5px; border: 2px solid red; color: red; font-weight: bold`;
+    errorElement.style = `z - index: 100; padding: 5px; border: 2px solid red; color: red; font - weight: bold`;
     errorElement.style.position = `absolute`;
     errorElement.style.top = `100px`;
-    errorElement.style.left = `50%`;
-    errorElement.style.transform = `translateX(-50%)`;
+    errorElement.style.left = `50 % `;
+    errorElement.style.transform = `translateX(-50 %)`;
     errorElement.style.fontSize = `30px`;
     errorElement.textContent = message;
     document.body.insertAdjacentElement(`afterbegin`, errorElement);
@@ -40,7 +47,6 @@
   window.map = {
     element: map,
     mapFiltersContainer,
-    mapPins,
     disableMap,
     enableMap,
   };

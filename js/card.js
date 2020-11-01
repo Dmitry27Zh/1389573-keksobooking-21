@@ -64,5 +64,6 @@
 
   window.card = {
     createCard,
+    close: closeCard,
   };
 })();
