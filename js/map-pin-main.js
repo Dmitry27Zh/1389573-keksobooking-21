@@ -2,9 +2,11 @@
 
 (function () {
   const mapPinMain = window.pin.mapPins.querySelector(`.map__pin--main`);
+  const mapPinMainInitialLeft = mapPinMain.style.left;
+  const mapPinMainInitialTop = mapPinMain.style.top;
   const mapPinMainImg = mapPinMain.querySelector(`img`);
-  const mapPinsMinCoord = 131;
-  const mapPinsMaxCoord = 639;
+  const MAP_PINS_MIN_CORD = 131;
+  const MAP_PINS_MAX_CORD = 639;
 
   const MapPinMainSizes = {
     Width: mapPinMainImg.offsetWidth,
@@ -38,8 +40,8 @@
       };
       const getPinY = function (initialY, moveValueY) {
         let y = initialY - moveValueY;
-        const minCoord = mapPinsMinCoord - MapPinMainSizes.Height;
-        const maxCoord = mapPinsMaxCoord - MapPinMainSizes.Height;
+        const minCoord = MAP_PINS_MIN_CORD - MapPinMainSizes.Height;
+        const maxCoord = MAP_PINS_MAX_CORD - MapPinMainSizes.Height;
         if (y < minCoord) {
           y = minCoord;
         } else if (y > maxCoord) {
@@ -71,6 +73,12 @@
     });
   };
 
+  const deactivateMapPinMain = function () {
+    mapPinMain.style.left = mapPinMainInitialLeft;
+    mapPinMain.style.top = mapPinMainInitialTop;
+    MapPinMainSizes.changeDeactivatedHeight();
+  };
+
   const activateMapPinMain = function () {
     mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
     mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
@@ -79,6 +87,7 @@
 
   window.mapPinMain = {
     activate: activateMapPinMain,
+    deactivate: deactivateMapPinMain,
     getCoordX,
     getCoordY,
   };

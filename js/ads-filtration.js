@@ -71,7 +71,9 @@
       }
     }
     window.card.close();
-    window.pin.addPins(filteredAds);
+    window.debounce(function () {
+      window.pin.addPins(filteredAds);
+    });
   };
 
   const mapFiltersInputHandler = function (evt) {

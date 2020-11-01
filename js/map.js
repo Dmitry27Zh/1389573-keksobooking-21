@@ -9,10 +9,14 @@
   const mapFeaturesFieldset = mapFilters.querySelector(`.map__features`);
 
   const disableMap = function () {
+    map.classList.add(`map--faded`);
+    window.pin.removePins();
+    window.mapPinMain.deactivate();
     mapFiltersList.forEach(function (filter) {
       filter.setAttribute(`disabled`, true);
     });
     mapFeaturesFieldset.setAttribute(`disabled`, `true`);
+    mapPins.removeEventListener(`click`, window.pin.mapPinClickHandler);
   };
 
   const enableMap = function () {
