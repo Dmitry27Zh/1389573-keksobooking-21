@@ -81,6 +81,8 @@
   const onSuccessSubmit = function () {
     showSaveMessage(`success`);
     window.main.deactivateElements();
+    window.scrollTo(0, 0);
+    adForm.reset();
   };
 
   const adFormSubmitHandler = function (evt) {
@@ -91,6 +93,7 @@
   const adFormResetClickHandler = function (evt) {
     evt.preventDefault();
     adForm.reset();
+    window.scrollTo(0, 0);
     window.main.deactivateElements();
   };
 
