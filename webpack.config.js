@@ -13,6 +13,7 @@ module.exports = {
     `./js/ad-form.js`,
     `./js/map-pin-main.js`,
     `./js/card.js`,
+    `./js/photo-preview-upload.js`,
     `./js/main.js`,
   ],
   output: {

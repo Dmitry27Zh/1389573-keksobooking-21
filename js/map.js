@@ -11,6 +11,8 @@
   const disableMap = function () {
     map.classList.add(`map--faded`);
     window.pin.removePins();
+    window.card.close();
+    mapFilters.reset();
     window.mapPinMain.deactivate();
     mapFiltersList.forEach(function (filter) {
       filter.setAttribute(`disabled`, true);

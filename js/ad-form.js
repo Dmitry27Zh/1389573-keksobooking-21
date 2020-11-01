@@ -105,6 +105,7 @@
     timeInput.removeEventListener(`input`, timeInputSync);
     adForm.removeEventListener(`submit`, adFormSubmitHandler);
     adFormReset.removeEventListener(`click`, adFormResetClickHandler);
+    window.photoPreviewUpload.disable();
   };
 
   const enableForm = function () {
@@ -121,9 +122,11 @@
     timeInput.addEventListener(`input`, timeInputSync);
     adForm.addEventListener(`submit`, adFormSubmitHandler);
     adFormReset.addEventListener(`click`, adFormResetClickHandler);
+    window.photoPreviewUpload.enable();
   };
 
   window.adForm = {
+    element: adForm,
     disable: disableForm,
     enable: enableForm,
     fillAddress,
