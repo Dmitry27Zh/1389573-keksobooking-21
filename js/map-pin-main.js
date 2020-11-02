@@ -8,29 +8,29 @@
   const MAP_PINS_MIN_CORD = 131;
   const MAP_PINS_MAX_CORD = 639;
 
-  const MapPinMainSizes = {
-    Width: mapPinMainImg.offsetWidth,
-    Height: mapPinMainImg.offsetHeight + 22,
+  const mapPinMainSizes = {
+    width: mapPinMainImg.offsetWidth,
+    height: mapPinMainImg.offsetHeight + 22,
     changeDeactivatedHeight() {
-      this.Height = mapPinMainImg.offsetHeight + 22;
+      this.height = mapPinMainImg.offsetHeight + 22;
     },
     changeActivatedHeight() {
-      this.Height = mapPinMainImg.offsetHeight / 2;
+      this.height = mapPinMainImg.offsetHeight / 2;
     }
   };
 
   const getCoordX = function () {
-    return Math.round(mapPinMain.offsetLeft + MapPinMainSizes.Width / 2);
+    return Math.round(mapPinMain.offsetLeft + mapPinMainSizes.width / 2);
   };
   const getCoordY = function () {
-    return Math.round(mapPinMain.offsetTop + MapPinMainSizes.Height);
+    return Math.round(mapPinMain.offsetTop + mapPinMainSizes.height);
   };
 
   const moveMapPinMain = function (evt, moveSomething) {
     moveSomething(evt, function (move) {
       const getPinX = function (initialX, moveValueX) {
         let x = initialX - moveValueX;
-        const maxCoord = window.pin.mapPins.offsetWidth - MapPinMainSizes.Width;
+        const maxCoord = window.pin.mapPins.offsetWidth - mapPinMainSizes.Width;
         if (x < 0) {
           x = 0;
         } else if (x > maxCoord) {
@@ -40,8 +40,8 @@
       };
       const getPinY = function (initialY, moveValueY) {
         let y = initialY - moveValueY;
-        const minCoord = MAP_PINS_MIN_CORD - MapPinMainSizes.Height;
-        const maxCoord = MAP_PINS_MAX_CORD - MapPinMainSizes.Height;
+        const minCoord = MAP_PINS_MIN_CORD - mapPinMainSizes.height;
+        const maxCoord = MAP_PINS_MAX_CORD - mapPinMainSizes.height;
         if (y < minCoord) {
           y = minCoord;
         } else if (y > maxCoord) {
@@ -76,13 +76,13 @@
   const deactivateMapPinMain = function () {
     mapPinMain.style.left = mapPinMainInitialLeft;
     mapPinMain.style.top = mapPinMainInitialTop;
-    MapPinMainSizes.changeDeactivatedHeight();
+    mapPinMainSizes.changeDeactivatedHeight();
   };
 
   const activateMapPinMain = function () {
     mapPinMain.addEventListener(`mousedown`, mapPinMainMousedownHandler);
     mapPinMain.addEventListener(`keydown`, mapPinMainKeydownHandler);
-    MapPinMainSizes.changeActivatedHeight();
+    mapPinMainSizes.changeActivatedHeight();
   };
 
   window.mapPinMain = {
