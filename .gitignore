@@ -7,7 +7,6 @@
 *.sublime*
 build/
 node_modules/
-bundle.js
 npm-debug.log*
 Thumbs.db
 .vscode/
