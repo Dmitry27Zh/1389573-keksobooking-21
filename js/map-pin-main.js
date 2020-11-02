@@ -30,7 +30,7 @@
     moveSomething(evt, function (move) {
       const getPinX = function (initialX, moveValueX) {
         let x = initialX - moveValueX;
-        const maxCoord = window.pin.mapPins.offsetWidth - mapPinMainSizes.Width;
+        const maxCoord = window.pin.mapPins.offsetWidth - mapPinMainSizes.width;
         if (x < 0) {
           x = 0;
         } else if (x > maxCoord) {
