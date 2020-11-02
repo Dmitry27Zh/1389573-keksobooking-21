@@ -81,6 +81,8 @@
   const onSuccessSubmit = function () {
     showSaveMessage(`success`);
     window.main.deactivateElements();
+    window.scrollTo(0, 0);
+    adForm.reset();
   };
 
   const adFormSubmitHandler = function (evt) {
@@ -91,6 +93,7 @@
   const adFormResetClickHandler = function (evt) {
     evt.preventDefault();
     adForm.reset();
+    window.scrollTo(0, 0);
     window.main.deactivateElements();
   };
 
@@ -105,6 +108,7 @@
     timeInput.removeEventListener(`input`, timeInputSync);
     adForm.removeEventListener(`submit`, adFormSubmitHandler);
     adFormReset.removeEventListener(`click`, adFormResetClickHandler);
+    window.photoPreviewUpload.disable();
   };
 
   const enableForm = function () {
@@ -121,9 +125,11 @@
     timeInput.addEventListener(`input`, timeInputSync);
     adForm.addEventListener(`submit`, adFormSubmitHandler);
     adFormReset.addEventListener(`click`, adFormResetClickHandler);
+    window.photoPreviewUpload.enable();
   };
 
   window.adForm = {
+    element: adForm,
     disable: disableForm,
     enable: enableForm,
     fillAddress,
