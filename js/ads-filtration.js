@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  const MIN_PRICE = 10000;
+  const MAX_PRICE = 50000;
   let ads = [];
   let activatedFilters = [];
   let activatedFeatures = [];
@@ -16,21 +18,20 @@
   };
   const checkPrice = function (filter, price) {
     let isPriceActual = false;
-    if (filter.value === `middle` && price > 10000 && price < 50000) {
+    if (filter.value === `middle` && price > MIN_PRICE && price < MAX_PRICE) {
       isPriceActual = true;
-    } else if (filter.value === `low` && price < 10000) {
+    } else if (filter.value === `low` && price < MIN_PRICE) {
       isPriceActual = true;
-    } else if (filter.value === `high` && price > 50000) {
+    } else if (filter.value === `high` && price > MAX_PRICE) {
       isPriceActual = true;
     }
     return isPriceActual;
   };
 
   const checkFeatures = function (ad) {
-    let isAdActual = activatedFeatures.every(function (feature) {
+    return activatedFeatures.every(function (feature) {
       return ad.offer.features.includes(feature);
     });
-    return isAdActual;
   };
 
   const checkAdByFilter = function (filter, ad) {
@@ -43,7 +44,7 @@
     } else if (filterName === `features`) {
       isAdActual = checkFeatures(ad);
     } else {
-      isAdActual = String(ad.offer[filterName]) === filter.value ? true : false;
+      isAdActual = String(ad.offer[filterName]) === filter.value;
     }
     return isAdActual;
   };
