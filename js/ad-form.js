@@ -14,8 +14,7 @@
   const adFormReset = adForm.querySelector(`.ad-form__reset`);
 
   const fillAddress = function () {
-    addressInput.value = `${window.mapPinMain.getCoordX()},
-    ${window.mapPinMain.getCoordY()}`;
+    addressInput.value = `${window.mapPinMain.getCoordX()}, ${window.mapPinMain.getCoordY()}`;
   };
 
   const priceList = {
@@ -80,9 +79,9 @@
 
   const onSuccessSubmit = function () {
     showSaveMessage(`success`);
-    window.main.deactivateElements();
     window.scrollTo(0, 0);
     adForm.reset();
+    window.main.deactivateElements();
   };
 
   const adFormSubmitHandler = function (evt) {
@@ -92,8 +91,8 @@
 
   const adFormResetClickHandler = function (evt) {
     evt.preventDefault();
-    adForm.reset();
     window.scrollTo(0, 0);
+    adForm.reset();
     window.main.deactivateElements();
   };
 

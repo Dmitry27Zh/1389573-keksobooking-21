@@ -9,7 +9,6 @@ module.exports = {
     `./js/pin.js`,
     `./js/ads-filtration.js`,
     `./js/map.js`,
-    `./js/data.js`,
     `./js/ad-form.js`,
     `./js/map-pin-main.js`,
     `./js/card.js`,
